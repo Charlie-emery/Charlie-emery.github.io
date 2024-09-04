@@ -304,6 +304,7 @@ We're going to create `<div>` tags to group our content together. What is the di
 
   ```
   </details>
+  ```
 
 #
 
