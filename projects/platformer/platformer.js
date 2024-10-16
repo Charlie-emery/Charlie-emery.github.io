@@ -68,6 +68,11 @@ createCannon("right", 777, 1000)
 createCannon("bottom", 770, 1000)
 createCannon("bottom", 770, 1000)
 createCannon("bottom", 570, 20000,1000,1000)
+createCannon("bottom", 570, 2000,100,100)
+createCannon("bottom", 0, 0, 1, 1)
+createCannon("top", 100, 0, 100, 100)
+createCannon("top", 200, 0, 100, 100)
+createCannon("top", 300, 0, 100, 100)
     /////////////////////////////////////////////////
     //////////ONLY CHANGE ABOVE THIS POINT///////////
     /////////////////////////////////////////////////
