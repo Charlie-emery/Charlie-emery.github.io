@@ -89,6 +89,10 @@
           /* increas positionX by 10 */
           positionX += speedX;
           positionY += speedY;
+         
+          if (missClick === 0){
+          endGame()
+        }
           moveBoxTo(positionX, positionY);
           if (positionX > boardWidth) {
             speedX = -speedX;
@@ -136,9 +140,6 @@
         getRandomColor()}
         function handleBoardClick(){
         missClick -= 1
-        if (missClick === 0){
-          endGame()
-        }
         }
         
         
