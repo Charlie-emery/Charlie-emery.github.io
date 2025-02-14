@@ -74,13 +74,14 @@ h3 {
 
 #portfolio {
   list-style-type: none;
-  padding-left: 0;
+  padding-left: 10;
+  padding-right: 10;
 }
 
 #portfolio li {
   background: #1e015c;
   padding: 10px;
-  border-radius: 10px;
+  border-radius: 5px;
   margin-bottom: 10px;
 }
 
