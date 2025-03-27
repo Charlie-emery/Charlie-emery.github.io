@@ -30,6 +30,8 @@ var updateInterval;
 
 // variable to keep track of the key (keycode) last pressed by the user
 var activeKey;
+var keyDirection
+
 
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////// GAME SETUP //////////////////////////////////////
@@ -87,15 +89,18 @@ function checkForNewDirection(event) {
 
   if (activeKey === KEY.LEFT && snake.head.direction !== "right") {
     snake.head.direction = "left";
+    
   }
   if (activeKey === KEY.RIGHT && snake.head.direction !== "left") {
     snake.head.direction = "right";
   }
   if (activeKey === KEY.UP && snake.head.direction !== "down") {
     snake.head.direction = "up";
+    
   }
   if (activeKey === KEY.DOWN && snake.head.direction !== "up") {
     snake.head.direction = "down";
+    
   }
 
   // FILL IN THE REST
@@ -325,8 +330,28 @@ function makeSnakeSquare(row, column) {
 */
 function handleKeyDown(event) {
   // TODO 6a: make the handleKeyDown function register which key is pressed
+  var lastKey = activeKey
+  if (lastKey === KEY.UP){
+    $("#snake-head").toggleClass('up');
+  }else if (lastKey === KEY.DOWN){
+    $("#snake-head").toggleClass('down');
+  }else if (lastKey === KEY.LEFT){
+    $("#snake-head").toggleClass('left');
+  }else if (lastKey === KEY.RIGHT){
+    $("#snake-head").toggleClass('right');
+  }
   activeKey = event.which;
   console.log(activeKey);
+  keyDirection = event.which
+  if (keyDirection === KEY.UP){
+    $("#snake-head").toggleClass('up');
+  }else if (keyDirection === KEY.DOWN){
+    $("#snake-head").toggleClass('down');
+  }else if (keyDirection === KEY.LEFT){
+    $("#snake-head").toggleClass('left');
+  }else if (keyDirection === KEY.RIGHT){
+    $("#snake-head").toggleClass('right');
+  }
 }
 
 /* Given a gameSquare (which may be a snakeSquare or the apple), position

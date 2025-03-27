@@ -7,7 +7,7 @@ body {
   width: 1150px;
   height: 650px;
   border: 5px solid rgb(255, 0, 0);
-  background-color: rgb(18, 216, 170);
+  background-color: rgb(170, 216, 18);
 }
 
 #score, #highScore {
@@ -23,21 +23,32 @@ body {
 }
 .apple {
   display: block;
-  width: 20px;
-  height: 20px;
+  width: 21px;
+  height: 21px;
   position: absolute;
   user-select: none
 }
 .snake {
-  background-color: green;
+  background-image: url(https://i.postimg.cc/mrwJFLZP/pixil-frame-0.png);
   z-index: 2;
 }
 
 #snake-head {
-  background-color: darkgreen;
+  background-image: url(https://i.postimg.cc/cCy5Myhz/pixil-frame-0-1.png);
 }
-
+.up {
+  transform: rotate(-90deg);
+}
+.down {
+  transform: rotate(90deg);
+}
+.left {
+  transform: rotate(180deg);
+}
+.right {
+  transform: rotate(360deg);
+}
 .apple {
-  background-color: red;
+  background-image: url(https://i.postimg.cc/nc5C6mm1/pixil-frame-0-1.png);
   z-index: 1;
 }
