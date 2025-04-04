@@ -15,8 +15,18 @@ function runProgram() {
     UP: 38,
     RIGHT: 39,
     DOWN: 40,
+    W: 87,
+    A: 65,
+    S: 83,
+    D: 68
   };
   var walker = {
+    positionX: 0,
+    positionY: 0,
+    speedX: 0,
+    speedY: 0,
+  };
+  var walker2 = {
     positionX: 0,
     positionY: 0,
     speedX: 0,
@@ -37,9 +47,9 @@ function runProgram() {
   by calling this function and executing the code inside.
   */
   function newFrame() {
-
-
     repositionGameItem();
+    wallCollision(walker);
+    wallCollision(walker2);
     redrawGameItem();
   }
 
@@ -51,7 +61,7 @@ function runProgram() {
     if (event.which === KEY.UP) {
       walker.speedY = -5;
     }
-     if (event.which === KEY.LEFT) {
+    if (event.which === KEY.LEFT) {
       walker.speedX = -5;
     }
     if (event.which === KEY.DOWN) {
@@ -60,22 +70,45 @@ function runProgram() {
     if (event.which === KEY.RIGHT) {
       walker.speedX = 5;
     }
-    
+    if (event.which === KEY.W) {
+      walker2.speedY = -5;
+    }
+    if (event.which === KEY.A) {
+      walker2.speedX = -5;
+    }
+    if (event.which === KEY.S) {
+      walker2.speedY = 5;
+    }
+    if (event.which === KEY.D) {
+      walker2.speedX = 5;
+    }
   }
-function handleKeyUp(event){
-  if (event.which === KEY.UP) {
-    walker.speedY = 0;
+  function handleKeyUp(event) {
+    if (event.which === KEY.UP) {
+      walker.speedY = 0;
+    }
+    if (event.which === KEY.LEFT) {
+      walker.speedX = 0;
+    }
+    if (event.which === KEY.DOWN) {
+      walker.speedY = 0;
+    }
+    if (event.which === KEY.RIGHT) {
+      walker.speedX = 0;
+    }
+    if (event.which === KEY.W) {
+      walker2.speedY = 0;
+    }
+    if (event.which === KEY.A) {
+      walker2.speedX = 0;
+    }
+    if (event.which === KEY.S) {
+      walker2.speedY = 0;
+    }
+    if (event.which === KEY.D) {
+      walker2.speedX = 0;
+    }
   }
-   if (event.which === KEY.LEFT) {
-    walker.speedX = 0;
-  }
-  if (event.which === KEY.DOWN) {
-    walker.speedY = 0;
-  }
-  if (event.which === KEY.RIGHT) {
-    walker.speedX = 0;
-  }
-}
   ////////////////////////////////////////////////////////////////////////////////
   ////////////////////////// HELPER FUNCTIONS ////////////////////////////////////
   ////////////////////////////////////////////////////////////////////////////////
@@ -87,13 +120,31 @@ function handleKeyUp(event){
     // turn off event handlers
     $(document).off();
   }
-  function repositionGameItem(){
+  function repositionGameItem() {
     walker.positionX += walker.speedX;
     walker.positionY += walker.speedY;
+    walker2.positionX += walker2.speedX;
+    walker2.positionY += walker2.speedY;
   }
-  function redrawGameItem(){
-    $("#walker").css("left", walker.positionX)
-    $("#walker").css("top", walker.positionY)
+  function redrawGameItem() {
+    $("#walker").css("left", walker.positionX);
+    $("#walker").css("top", walker.positionY);
+    $("#walker2").css("left", walker2.positionX);
+    $("#walker2").css("top", walker2.positionY);
   }
-  function wallCollision
+  function wallCollision(walker) {
+    if (walker.positionX <= 0) {
+      walker.positionX = 0
+    }
+    if (walker.positionY <= 0) {
+      walker.positionY = 0
+    }
+    if ($("#board").width() < walker.positionX + 50){
+      walker.positionX = $("#board").width() -50
+    }
+    if ($("#board").height() < walker.positionY + 50){
+      walker.positionY = $("#board").height() -50
+    }
+    
+  }
 }
