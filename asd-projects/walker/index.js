@@ -10,6 +10,7 @@ function runProgram() {
   // Constant Variables
   var FRAME_RATE = 60;
   var FRAMES_PER_SECOND_INTERVAL = 1000 / FRAME_RATE;
+  var round = 0
   var KEY = {
     LEFT: 37,
     UP: 38,
@@ -21,17 +22,23 @@ function runProgram() {
     D: 68
   };
   var walker = {
-    positionX: 0,
-    positionY: 0,
+    positionX: 750,
+    positionY: 750,
     speedX: 0,
     speedY: 0,
+    length: 40,
+    width: 40,
   };
   var walker2 = {
     positionX: 0,
     positionY: 0,
     speedX: 0,
     speedY: 0,
+    length: 40,
+    width: 40,
   }
+  
+  
   // Game Item Objects
 
   // one-time setup
@@ -47,9 +54,11 @@ function runProgram() {
   by calling this function and executing the code inside.
   */
   function newFrame() {
+    
     repositionGameItem();
     wallCollision(walker);
     wallCollision(walker2);
+    playerCollision();
     redrawGameItem();
   }
 
@@ -146,5 +155,30 @@ function runProgram() {
       walker.positionY = $("#board").height() -50
     }
     
+  }
+  function playerCollision() {
+    walker.length = walker.positionY + 40
+    walker.width = walker.positionX + 40
+    walker2.length = walker2.positionY + 40
+    walker2.width = walker2.positionX + 40
+    
+    if (walker.positionX <= walker2.width && 
+      walker.positionY <= walker2.length && 
+      walker.length >= walker2.positionY &&
+      walker.width >= walker2.positionX) {
+      walker2.positionX = 0
+      walker2.positionY = 0
+      walker.positionX = 750
+      walker.positionY = 750
+      round ++
+      console.log(round)
+    }
+    if (round % 2 === 0){
+      document.getElementById("walker2").style.backgroundColor = "red"
+      document.getElementById("walker").style.backgroundColor = "teal"
+    }else{
+      document.getElementById("walker").style.backgroundColor = "red"
+      document.getElementById("walker2").style.backgroundColor = "green"
+    }
   }
 }
