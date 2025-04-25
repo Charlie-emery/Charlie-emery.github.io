@@ -20,8 +20,8 @@ function resetAndRender() {
 // all of your apply functions
 function applyAndRender() {
   // Multiple TODOs: Call your apply function(s) here
-  applyFilter(reddify);
-
+  applyFilter(reddify)
+  
   // do not change the below line of code
   render($("#display"), image);
 }
@@ -34,6 +34,7 @@ function applyAndRender() {
 function applyFilter(filterFunction) {
   for (let i = 0; i < image.length; i++) {
     for (let j = 0; j < image[i].length; j++) {
+      console.log(image[i][j-1])
       var rgbString = image[i][j]
       var rgbNumbers = rgbStringToArray(rgbString)
       filterFunction(rgbNumbers)
@@ -44,7 +45,20 @@ function applyFilter(filterFunction) {
 }
 
 // TODO 7: Create the applyFilterNoBackground function
-
+function applyFilterNoBackground(filterFunction){
+  background = image[0][0]
+  for (let i = 0; i < image.length; i++) {
+    for (let j = 0; j < image[i].length; j++) {
+      var rgbString = image[i][j]
+      if (rgbString !== background){
+      var rgbNumbers = rgbStringToArray(rgbString)
+      filterFunction(rgbNumbers)
+      rgbString = rgbArrayToString(rgbNumbers)
+      image[i][j] = rgbString}
+      
+    }
+  }
+}
 // TODO 5: Create the keepInBounds function
 function keepInBounds(num) {
   num = num < 0 ? 0 : num
@@ -55,7 +69,26 @@ function keepInBounds(num) {
 // TODO 3: Create reddify function
 function reddify(arr) {
   arr[RED] = 200
+  
 }
 // TODO 6: Create more filter functions
-
+function decreaseBlue(arr){
+  arr[BLUE] = keepInBounds(arr[BLUE] - 50)
+}
+function increaseGreenByBlue(arr){
+  arr[GREEN] = keepInBounds(arr[BLUE] + arr[GREEN])
+}
 // CHALLENGE code goes below here
+function smudge(){
+  for (let i = 0; i < image.length; i++) {
+    for (let j = 0; j < image[i].length; j++) {
+      var rgbString = image[i][j]
+      var lastRGBString = image[i][j - 1]
+      var rgbNumbers = rgbStringToArray(rgbString)
+      var lastRGBNumbers = rgbStringToArray(lastRGBString)
+      rgbNumbers = lastRGBNumbers
+      rgbString = rgbArrayToString(rgbNumbers)
+      image[i][j] = rgbString
+    }
+  }
+}
