@@ -20,7 +20,7 @@ function resetAndRender() {
 // all of your apply functions
 function applyAndRender() {
   // Multiple TODOs: Call your apply function(s) here
-  applyFilter(reddify)
+  smudge()
   
   // do not change the below line of code
   render($("#display"), image);
@@ -81,12 +81,18 @@ function increaseGreenByBlue(arr){
 // CHALLENGE code goes below here
 function smudge(){
   for (let i = 0; i < image.length; i++) {
-    for (let j = 0; j < image[i].length; j++) {
+    for (let j = image[i].length - 1;j > 0 ; j--) {
       var rgbString = image[i][j]
-      var lastRGBString = image[i][j - 1]
+      var leftrgbString = image[i][j - 1]
+      if (j === 0){
+        var lastRGBString = image[i][j]
+      } else{ lastRGBString = image[i][j - 1]}
+      
       var rgbNumbers = rgbStringToArray(rgbString)
-      var lastRGBNumbers = rgbStringToArray(lastRGBString)
-      rgbNumbers = lastRGBNumbers
+      var lastRGBNumbers = rgbStringToArray(leftrgbString)
+      rgbNumbers[RED] = (lastRGBNumbers[RED] + rgbNumbers[RED]) / 2
+      rgbNumbers[BLUE] = (lastRGBNumbers[BLUE] + rgbNumbers[BLUE]) / 2
+      rgbNumbers[GREEN] = (lastRGBNumbers[GREEN] + rgbNumbers[GREEN]) / 2
       rgbString = rgbArrayToString(rgbNumbers)
       image[i][j] = rgbString
     }
