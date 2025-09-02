@@ -41,10 +41,10 @@ a {
 main {
   background: rgb(92, 206, 31);
   display: flex;
-  border-radius: 5% /50%;
+  border-radius: 10% /50%;
 }
 .sidebar {
-  margin-right: 25px;
+  margin-right: 20px;
   padding: 10px;
 }
 .sidebar-img {
