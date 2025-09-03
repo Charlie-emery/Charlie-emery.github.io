@@ -26,12 +26,16 @@
     .activateTick();
 
   // Variable declarations for the paddles and the ball which are drawn using createJS (see bower_components/opspark-draw/draw.js)
-  const paddlePlayer = createPaddle();
-  const paddleCPU = createPaddle({
+    const ball = draw.circle(20, "#CCC");
+    const paddlePlayer = createPaddle();
+    const paddleHight = 100
+    const paddleWidth = 20
+    const paddleCPU = createPaddle({
     x: canvas.width - 20,
     y: canvas.height - 100,
   });
-  const ball = draw.circle(20, "#CCC");
+
+  
 
   // set initial properties for the paddles
   paddlePlayer.yVelocity = 0;
@@ -75,7 +79,7 @@
     const heightPlayer = paddlePlayer.height;
 
     // Ball movement: the xVelocity and yVelocity is the distance the ball moves per update
-    ball.x = ball.x + ball.xVelocity;
+     ball.x = ball.x + ball.xVelocity;
     ball.y = ball.y + ball.yVelocity;
 
     // Player movement //
@@ -88,21 +92,38 @@
     }
 
     // AI movement: CPU follows ball //
-    if ((paddleCPU.y + midCPU) < (ball.y - 14)) {
-      paddleCPU.y += paddleCPU.yVelocity;
+    if ((paddleCPU.y + midCPU) < (ball.y - 14))// incresing or decresing this numbert would increase the searching range of the sistem//)) 
+     { paddleCPU.y += paddleCPU.yVelocity;
     } else if ((paddleCPU.y + midCPU) > (ball.y + 14)) {
       paddleCPU.y -= paddleCPU.yVelocity;
     }
 
     // TODO 1: bounce the ball off the top
-
+    if(ball.y <= 0){
+      ball.yVelocity = -ball.yVelocity
+      createjs.Sound.play("wall")
+    }
 
     // TODO 2: bounce the ball off the bottom
-
+if(ball.y >= canvas.height){
+      ball.yVelocity = -ball.yVelocity
+      createjs.Sound.play("wall")
+    }
 
     // TODO 3: bounce the ball off each of the paddles
-
-
+if (paddleCPU.x < ball.x && ball.y > paddleCPU.y && ball.y < paddleCPU.y + paddleHight){
+  ball.xVelocity = -ball.xVelocity - 0.5
+  createjs.Sound.play("hit")
+}
+if (paddlePlayer.x + paddleWidth >= ball.x && ball.y > paddlePlayer.y && ball.y < paddlePlayer.y + paddleHight){
+  ball.xVelocity = -ball.xVelocity + 0.5
+  createjs.Sound.play("hit")
+}
+if (ball.x < -1 || ball.x > canvas.width + 1){
+  ball.x = canvas.width / 2;
+  ball.y = canvas.height / 2;
+  ball.xVelocity = 5
+}
   }
 
   // helper function that wraps the draw.rect function for easy paddle making

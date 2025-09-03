@@ -42,10 +42,13 @@ main {
   background: rgb(92, 206, 31);
   display: flex;
   border-radius: 10% /50%;
+  padding: 40px;
+  
 }
 .sidebar {
   margin-right: 20px;
   padding: 10px;
+ 
 }
 .sidebar-img {
   width: 200px;
