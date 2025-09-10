@@ -26,15 +26,21 @@
     .activateTick();
 
   // Variable declarations for the paddles and the ball which are drawn using createJS (see bower_components/opspark-draw/draw.js)
-    const ball = draw.circle(20, "#CCC");
+    const ball = draw.circle(20, "#ff0000ff");
     const paddlePlayer = createPaddle();
     const paddleHight = 100
-    const paddleWidth = 20
+    const paddleWidth = 25
+    var score = 0
+    var hightScore = 0
     const paddleCPU = createPaddle({
     x: canvas.width - 20,
-    y: canvas.height - 100,
-  });
-
+    y: canvas.height - 100,  });
+  let text = draw.textfield("Score "+score, "30px Arial", "yellow")
+  let text2 = draw.textfield("High Score "+hightScore, "30px Arial", "yellow")
+text.x = 70
+text.y = 30 
+text2.x = 90
+text2.y = 60 
   
 
   // set initial properties for the paddles
@@ -48,7 +54,7 @@
   ball.yVelocity = 5;
 
   // add the paddles and the ball to the view
-  stage.addChild(paddlePlayer, paddleCPU, ball);
+  stage.addChild(paddlePlayer, paddleCPU, ball, text, text2);
 
   document.addEventListener("keyup", onKeyUp);
   document.addEventListener("keydown", onKeyDown);
@@ -77,7 +83,7 @@
     const boundsPlayer = paddlePlayer.getBounds();
     const widthPlayer = paddlePlayer.width;
     const heightPlayer = paddlePlayer.height;
-
+    text.text = "score " + score
     // Ball movement: the xVelocity and yVelocity is the distance the ball moves per update
      ball.x = ball.x + ball.xVelocity;
     ball.y = ball.y + ball.yVelocity;
@@ -112,14 +118,21 @@ if(ball.y >= canvas.height){
 
     // TODO 3: bounce the ball off each of the paddles
 if (paddleCPU.x < ball.x && ball.y > paddleCPU.y && ball.y < paddleCPU.y + paddleHight){
-  ball.xVelocity = -ball.xVelocity - 0.5
+  ball.xVelocity = -ball.xVelocity
   createjs.Sound.play("hit")
 }
 if (paddlePlayer.x + paddleWidth >= ball.x && ball.y > paddlePlayer.y && ball.y < paddlePlayer.y + paddleHight){
   ball.xVelocity = -ball.xVelocity + 0.5
   createjs.Sound.play("hit")
+  score++
+  console.log (score)
+  // text.text = "score " + score
 }
 if (ball.x < -1 || ball.x > canvas.width + 1){
+  if(hightScore < score){
+    text2.text = "hightScore " + score
+  }
+  score = 0
   ball.x = canvas.width / 2;
   ball.y = canvas.height / 2;
   ball.xVelocity = 5
@@ -132,7 +145,7 @@ if (ball.x < -1 || ball.x > canvas.width + 1){
     height = 100,
     x = 0,
     y = 0,
-    color = "#CCC",
+    color = "#005fedff",
   } = {}) {
     const paddle = draw.rect(width, height, color);
     paddle.x = x;
