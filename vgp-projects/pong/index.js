@@ -86,7 +86,7 @@ text2.y = 60
     text.text = "score " + score
     // Ball movement: the xVelocity and yVelocity is the distance the ball moves per update
      ball.x = ball.x + ball.xVelocity;
-    // ball.y = ball.y + ball.yVelocity;
+    ball.y = ball.y + ball.yVelocity;
 
     // Player movement //
     paddlePlayer.y += paddlePlayer.yVelocity;

@@ -6,8 +6,9 @@
   // TODO 5: Initialize CreateJS //
   const canvas = document.getElementById("canvas")
   const stage = new createjs.Stage(canvas);
-  var speedX = 1;
-  var speedY = -1;
+  var speedL = 1;
+  var speedR = -1;
+  var speedY = -1
   // TODO 6: Set the framerate of the Ticker
   createjs.Ticker.framerate = 60
 
@@ -44,8 +45,8 @@ const rightEye = new createjs.Shape();
 const leftM = new createjs.Shape();
 const rightM = new createjs.Shape();
 
-leftP.graphics.beginFill("rgba(0, 0, 0, 1)").drawCircle(25, 25, 15)
-rightP.graphics.beginFill("rgba(0, 0, 0, 1)").drawCircle(250, 25, 15)
+leftP.graphics.beginFill("rgba(0, 0, 0, 1)").drawCircle(35, 25, 15)
+rightP.graphics.beginFill("rgba(0, 0, 0, 1)").drawCircle(240, 25, 15)
 leftEye.graphics.beginFill("rgba(255, 255, 255, 1)").drawCircle(25, 50, 35)
 leftEye.scaleY= 0.5
 rightEye.graphics.beginFill("rgba(255, 255, 255, 1)").drawCircle(250, 50, 35)
@@ -108,28 +109,30 @@ stage.update()
    * changes to assets, it must call stage.update(); 
    */
   function update(event){
-    leftM.x += speedX
-    leftEye.x += speedX
-    leftP.x += speedX
-     rightM.x += speedY
-    rightEye.x += speedY
-    rightP.x += speedY
+    leftM.x += speedL
+    leftEye.x += speedL
+    leftP.x += speedL
+     rightM.x += speedR
+    rightEye.x += speedR
+    rightP.x += speedR
     
     if (leftEye.x >= 220){
-     speedX = -speedX
-   }else if(leftEye <= 55){
+     speedL = -speedL
+   }
+   if(leftEye.x < 0){
   
-  speedX = -speedX  
+  speedL = -speedL  
   }
     if (rightEye.x <= -220){
-     speedY = -speedY
-   }else if(rightEye >= -55){
+     speedR = -speedR
+   }
+   if(rightEye.x > 0){
   
-  speedY = -speedY
+  speedR = -speedR
   }
    
     
-    stage.update();
+    stage.update();ghg
   }
   
 

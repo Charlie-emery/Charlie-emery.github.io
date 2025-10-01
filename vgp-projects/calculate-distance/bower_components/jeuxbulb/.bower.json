@@ -1,0 +1,13 @@
+{
+  "name": "jeuxbulb",
+  "_cacheHeaders": {
+    "ETag": "W/\"72a973256f4466a4ebafc8d0dc59cfcf\"",
+    "Content-Type": "text/html; charset=utf-8"
+  },
+  "_release": "e-tag:W/\"72a9732",
+  "main": "index",
+  "_source": "https://github.com/Charlie-emery/jeuxbulb",
+  "_target": "*",
+  "_originalSource": "https://github.com/Charlie-emery/jeuxbulb",
+  "_direct": true
+}
