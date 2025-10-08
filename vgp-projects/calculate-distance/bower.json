@@ -19,6 +19,6 @@
   "dependencies": {
     "EaselJS": "^1.0.2",
     "V6": "^0.0.2",
-    "jeuxbulb": "https://github.com/Charlie-emery/jeuxbulb"
+    "jeuxbulb": "https://github.com/Charlie-emery/jeuxbulb.git#^0.2.0"
   }
 }
