@@ -52,7 +52,7 @@ async function partition(arr, left, right){
         while (right >= pivot){
             right--
         }
-    } if (left >= right){
+    } if (left >=  right){
         swap(arr, left, right)
         updateCounter(quickCounter)
         await sleep()
