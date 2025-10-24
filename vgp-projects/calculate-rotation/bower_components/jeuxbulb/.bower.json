@@ -1,0 +1,31 @@
+{
+  "name": "jeuxbulb",
+  "main": "index.js",
+  "homepage": "https://github.com/Charlie-emery/jeuxbulb",
+  "description": "",
+  "keywords": [
+    "video-games"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "lodash": "^4.17.21"
+  },
+  "version": "0.2.0",
+  "_release": "0.2.0",
+  "_resolution": {
+    "type": "version",
+    "tag": "v0.2.0",
+    "commit": "e95a01e076490421e9be841741cec216a8d63071"
+  },
+  "_source": "https://github.com/Charlie-emery/jeuxbulb.git",
+  "_target": "^0.2.0",
+  "_originalSource": "https://github.com/Charlie-emery/jeuxbulb.git",
+  "_direct": true
+}

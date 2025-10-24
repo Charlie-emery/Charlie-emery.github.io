@@ -12,14 +12,16 @@
   stage.addChild(textfield);
 
   // try a different hex color if you want //
-  const ship = assets.makeShip('#4286f4');
+  const ship = assets.makeShip('#f00000ff');
   
   
   // TODO 5: Center the ship on the stage //
-  ship.x = 2/canvas.width
+  ship.x = canvas.width/2
+  ship.y = canvas.height/2
+  console.log(ship)
 
   // TODO 6: Add the ship to the stage //
-  
+    stage.addChild(ship);
 
   
   function update(event) {
