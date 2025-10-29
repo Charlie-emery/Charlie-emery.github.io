@@ -17,15 +17,15 @@
   "dependencies": {
     "lodash": "^4.17.21"
   },
-  "version": "0.2.0",
-  "_release": "0.2.0",
+  "version": "0.4.0",
+  "_release": "0.4.0",
   "_resolution": {
     "type": "version",
-    "tag": "v0.2.0",
-    "commit": "e95a01e076490421e9be841741cec216a8d63071"
+    "tag": "v0.4.0",
+    "commit": "2486c92f18b7d382691af7a6db2c0fbcb62be3b5"
   },
   "_source": "https://github.com/Charlie-emery/jeuxbulb.git",
-  "_target": "^0.2.0",
+  "_target": "^0.4.0",
   "_originalSource": "https://github.com/Charlie-emery/jeuxbulb.git",
   "_direct": true
 }
