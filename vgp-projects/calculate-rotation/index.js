@@ -44,7 +44,7 @@
 
     // TODO 8: Set the ship's rotation property to the degrees //
     ship.rotation = degrees;
-    ship2.rotation = -degrees
+    ship2.rotation = degrees+180
 
     /*
      * TODO 9: Uncomment the line below to update the textfield
