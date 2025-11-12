@@ -36,7 +36,9 @@
           .spawn('#f44242'),
           
         orb = opspark.playa.orb(assets, fx, messenger)
-          .spawn(25);
+          .spawn(1);
+        p = opspark.playa.powerup(assets, fx, messenger)
+        .spawn(1);
       
       game.view.addChild(view.container);
       
