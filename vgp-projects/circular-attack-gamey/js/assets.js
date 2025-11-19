@@ -46,6 +46,11 @@
       phyz.updateVelocity(this, 0, 0);
       phyz.reboundCircularAssetInArea(this, canvas);
     }
+    
+    function updatePariPowerUp(event) {
+      phyz.updateVelocity(this, 0, 0);
+      phyz.reboundCircularAssetInArea(this, canvas);
+    }
 
     function updateProjectile(impact) {
       phyz.reboundCircularAssetInArea(this, canvas);
@@ -174,20 +179,29 @@
       makePariPowerUp() {
         console.log("called makePariPowerUp");
         //  const pariPowerUp = draw.rect(50, 30, "#ff0000ff", null, null,  0,  0);
-            const pariPowerUp = draw.randomCircleInArea(canvas, false, true, "#ff0000ff", 2);
-            draw.rect(60, 30,"#ff0000ff", pariPowerUp);
+        pariPowerUp = draw.circle(27, "#33ff00ff", null, null, null, null);
+        draw.polyStar(7, 3, 3, 0, "#ff0000ff", null, null, 13, null, pariPowerUp);
+          draw.polyStar(4, 3, 4, 180, "#0091ffff", null, null, -15, 0, pariPowerUp);
+        draw.rect(28, 30, "#33ff00ff", null, null, -15, -15, pariPowerUp);
+          draw.polyStar(5, 4, 5, 0, "#ff0000ff", null, null, -10, 0, pariPowerUp);
+            draw.rect(25, 10, "#ff0000ff", null, null, -10, -5, pariPowerUp);
+            draw.circle(27, "rgba(0,0,0,0)", null, null, null, null, pariPowerUp);
 
-        // console.log(`rad: ${orb.radius}`);
-        // console.log(`den: ${orb.radius / 20 * 0.5}`);
+            
+        
+        pariPowerUp.x = numz.randomIntBetween(0, canvas.width);
+        pariPowerUp.y = numz.randomIntBetween(0, canvas.height);
+        console.log(`rad: ${pariPowerUp.radius}`);
+        console.log(`den: ${pariPowerUp.radius / 20 * 0.5}`);
         Object.assign(
           pariPowerUp,
-          phyz.makeBody("orb", {
+          phyz.makeBody("pariPowerUp", {
             density: (pariPowerUp.radius / 20) * 0.5,
             volatility: pariPowerUp.radius * 0.0001,
           })
         );
         phyz.addRandomVelocity(pariPowerUp, canvas);
-        pariPowerUp.update = updateOrb;
+        pariPowerUp.update = updatePariPowerUp;
         return pariPowerUp;
       },
     };

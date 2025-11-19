@@ -1,10 +1,12 @@
-(function(window, opspark, _) {
+(function (window, opspark, _) {
   // create a namespace for the ship manager //
-  _.set(opspark, 'playa.ship',
+  _.set(
+    opspark,
+    "playa.ship",
     /**
      * Creates and returns the ship manager.
      */
-    function(assets, controls, messenger, projectile, emitter, level, keyMap) {
+    function (assets, controls, messenger, projectile, emitter, level, keyMap) {
       // default key map //
       keyMap = keyMap || {
         UP: controls.KEYS.UP,
@@ -12,11 +14,9 @@
         RIGHT: controls.KEYS.RIGHT,
         FIRE: controls.KEYS.SPACE,
       };
-      
-      let 
-        ship, 
-        fire;
-        
+
+      let ship, fire;
+
       setRateOfFire(level.rateOfFire);
 
       function explode() {
@@ -26,43 +26,70 @@
 
         // show the player explosion for a short period of time //
         i = 0;
-        id = setInterval(function() {
+        id = setInterval(function () {
           ship.explosion.emit({ x: ship.x, y: ship.y });
           if (i > 60) {
             window.clearInterval(id);
             ship.explosion.stop();
             emitter.destroy();
-            messenger.dispatch({ type: 'DESPAWN', bodies: [ship], source: 'ship' });
+            messenger.dispatch({
+              type: "DESPAWN",
+              bodies: [ship],
+              source: "ship",
+            });
           }
           i++;
         }, 17);
       }
-      
+
       function setRateOfFire(value) {
-        fire = _.throttle(player => projectile.fire(player), value, { 'trailing': false });
+        fire = _.throttle((player) => projectile.fire(player), value, {
+          trailing: false,
+        });
       }
-      
+
       function handleCollisionShip(impact, otherBody) {
-        console.log("ship Collision")
         if (this.integrity > 0) {
-           if(otherBody.type === "orb"){
-          this.integrity -= impact;}
-          messenger.dispatch({ type: 'DAMAGE', source: 'ship', target: this });
+        if (otherBody.type === "pariPowerUp") {
+          ship.pariPowerUp = true;
+        }
+        console.log(ship.pariPowerUp);
+        setTimeout(function () {
+          ship.pariPowerUp = false;
+        }, 50000);
+
+        if (otherBody.type === "projectile" && ship.pariPowerUp) {
+          otherBody.velocityX = otherBody.velocityX * -1;
+          otherBody.velocityY = otherBody.velocityY * -1;
+        } else if (
+          otherBody.type === "projectile" &&
+          !ship.pariPowerUp
+        ) {
+          this.integrity -= impact;
+        }
+          if (otherBody.type === "orb") {
+            this.integrity -= impact*0.5;
+          }
+          messenger.dispatch({ type: "DAMAGE", source: "ship", target: this });
           if (this.integrity <= 0) {
             explode();
-            messenger.dispatch({ type: 'EXPLOSION', source: 'ship', target: this });
+            messenger.dispatch({
+              type: "EXPLOSION",
+              source: "ship",
+              target: this,
+            });
           }
         }
       }
 
       // return the ship manager api //
       return {
-        spawn(color = '#4286f4') {
-          if(ship) throw new Error('Player is already spawned!');
+        spawn(color = "#4286f4") {
+          if (ship) throw new Error("Player is already spawned!");
           // only one ship is managed by the module //
           ship = assets.makeShip(color);
           ship.handleCollision = handleCollisionShip;
-          messenger.dispatch({ type: 'SPAWN', bodies: [ship], source: 'ship' });
+          messenger.dispatch({ type: "SPAWN", bodies: [ship], source: "ship" });
           return this;
         },
         setRateOfFire,
@@ -88,7 +115,7 @@
             emitter.stop();
             ship.propulsion = 0;
           }
-          
+
           /*
            * Space key can be pressed in combo with other keys.
            * Throttle the rateOfFire using _.throttle based on
@@ -99,5 +126,6 @@
           }
         },
       };
-    });
-}(window, window.opspark, window._));
+    }
+  );
+})(window, window.opspark, window._);
