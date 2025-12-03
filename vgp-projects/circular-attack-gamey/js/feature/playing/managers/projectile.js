@@ -36,7 +36,8 @@
         return assets.makeProjectile();
       }
       
-      function handleCollisionProjectile(impact) {
+      function handleCollisionProjectile(impact, otherBody, emitter) {
+        
         // TODO : Consider if particles are necessary here //
         // particleManager.makeEmitter(1, 2, '#FF0000').emit({x: projectile.x, y: projectile.y}, 0.5);
       }
@@ -67,7 +68,9 @@
           //projectile.activate();
           projectile.x = projectilePoint.x;
           projectile.y = projectilePoint.y;
-          
+           if(emitter.LaserPower === true){
+          projectile.scaleX = 5
+          projectile.scaleY = 5}
           // keep a reference on the projectile to who shot the projectile //
           projectile.emitter = emitter;
 

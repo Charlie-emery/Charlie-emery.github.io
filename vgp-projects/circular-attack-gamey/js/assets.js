@@ -51,6 +51,10 @@
       phyz.updateVelocity(this, 0, 0);
       phyz.reboundCircularAssetInArea(this, canvas);
     }
+    function updateLaserPower(event) {
+      phyz.updateVelocity(this, 0, 0);
+      phyz.reboundCircularAssetInArea(this, canvas);
+    }
 
     function updateProjectile(impact) {
       phyz.reboundCircularAssetInArea(this, canvas);
@@ -203,6 +207,35 @@
         phyz.addRandomVelocity(pariPowerUp, canvas);
         pariPowerUp.update = updatePariPowerUp;
         return pariPowerUp;
+      },
+      makeLaserPower() {
+        console.log("called makeLaserPower");
+        //  const pariPowerUp = draw.rect(50, 30, "#ff0000ff", null, null,  0,  0);
+        LaserPower = draw.circle(27, "#0059ffff", null, null, null, null);
+        draw.polyStar(32, 9, 2, 0, "#ff0000ff", null, null, 0, null, LaserPower);
+        draw.polyStar(32, 9, 2, 20, "#0059ffff", null, null, 0, null, LaserPower);
+        draw.polyStar(22, 9, 2, 20, "#ff0000ff", null, null, 0, null, LaserPower);
+        draw.polyStar(22, 9, 2, 40, "#0059ffff", null, null, 0, null, LaserPower);
+        draw.polyStar(15, 9, 2, 0, "#ff0000ff", null, null, 0, null, LaserPower);
+        draw.polyStar(15, 9, 2, 20, "#0059ffff", null, null, 0, null, LaserPower);
+            draw.circle(27, "rgba(0,0,0,0)", null, null, null, null, LaserPower);
+
+            
+        
+        LaserPower.x = numz.randomIntBetween(0, canvas.width);
+        LaserPower.y = numz.randomIntBetween(0, canvas.height);
+        console.log(`rad: ${LaserPower.radius}`);
+        console.log(`den: ${LaserPower.radius / 20 * 0.5}`);
+        Object.assign(
+          LaserPower,
+          phyz.makeBody("LaserPower", {
+            density: (LaserPower.radius / 20) * 0.5,
+            volatility: LaserPower.radius * 0.0001,
+          })
+        );
+        phyz.addRandomVelocity(LaserPower, canvas);
+        LaserPower.update = updateLaserPower;
+        return LaserPower;
       },
     };
   });

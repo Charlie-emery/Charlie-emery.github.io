@@ -49,18 +49,17 @@
       }
 
       function handleCollisionShip(impact, otherBody) {
-        if (this.integrity > 0) {
-        if (otherBody.type === "pariPowerUp") {
+        if (this.integrity > 0 && otherBody.type === "pariPowerUp") {
           ship.pariPowerUp = true;
-        }
         console.log(ship.pariPowerUp);
         setTimeout(function () {
           ship.pariPowerUp = false;
-        }, 50000);
+        }, 5000);
 
         if (otherBody.type === "projectile" && ship.pariPowerUp) {
           otherBody.velocityX = otherBody.velocityX * -1;
           otherBody.velocityY = otherBody.velocityY * -1;
+          this.integrity += impact
         } else if (
           otherBody.type === "projectile" &&
           !ship.pariPowerUp
@@ -68,7 +67,7 @@
           this.integrity -= impact;
         }
           if (otherBody.type === "orb") {
-            this.integrity -= impact*0.5;
+            this.integrity -= impact;
           }
           messenger.dispatch({ type: "DAMAGE", source: "ship", target: this });
           if (this.integrity <= 0) {
@@ -106,6 +105,12 @@
           } else {
             ship.rotationalVelocity = 0;
           }
+        if(ship.LaserPower === true){
+          setRateOfFire(500)
+          setTimeout(function () {
+          ship.LaserPower = false;
+        }, 5000);
+        }
 
           // up arrow can be pressed in combo with other keys //
           if (controls.isActive(keyMap.UP)) {
