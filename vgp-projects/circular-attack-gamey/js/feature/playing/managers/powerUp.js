@@ -42,6 +42,7 @@
           },
         },
         powerupManager = {
+        
           getNumberActive() {
             return active.length;
           },
@@ -64,6 +65,7 @@
       function makeObject() {
         console.log("inside makeObject");
         const powerup = assets.makePariPowerUp();
+        pariPowerUp.integrity = 100
         powerup.handleCollision = handleCollision;
         return powerup;
       }

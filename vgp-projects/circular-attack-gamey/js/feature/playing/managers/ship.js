@@ -1,3 +1,4 @@
+
 (function (window, opspark, _) {
   // create a namespace for the ship manager //
   _.set(
@@ -47,28 +48,27 @@
           trailing: false,
         });
       }
-
+    
       function handleCollisionShip(impact, otherBody) {
-        if (this.integrity > 0 && otherBody.type === "pariPowerUp") {
+        if (this.integrity > 0 ) {
+          if(otherBody.type === "pariPowerUp"){
           ship.pariPowerUp = true;
         console.log(ship.pariPowerUp);
         setTimeout(function () {
           ship.pariPowerUp = false;
         }, 5000);
-
-        if (otherBody.type === "projectile" && ship.pariPowerUp) {
+      }
+        if (otherBody.type === "projectile" && ship.pariPowerUp === true) {
           otherBody.velocityX = otherBody.velocityX * -1;
           otherBody.velocityY = otherBody.velocityY * -1;
           this.integrity += impact
-        } else if (
-          otherBody.type === "projectile" &&
-          !ship.pariPowerUp
-        ) {
-          this.integrity -= impact;
         }
-          if (otherBody.type === "orb") {
-            this.integrity -= impact;
-          }
+        // } else if (ship.pariPowerUp === false) {
+        //   this.integrity -= impact*100;
+           else {
+          this.integrity -= impact;
+           }
+         
           messenger.dispatch({ type: "DAMAGE", source: "ship", target: this });
           if (this.integrity <= 0) {
             explode();
@@ -111,6 +111,11 @@
           ship.LaserPower = false;
         }, 5000);
         }
+         if(LaserPower.integrity <= 0){
+        setTimeout(function() { 
+        // makeLaserPower(1)
+}, 5)
+      }
 
           // up arrow can be pressed in combo with other keys //
           if (controls.isActive(keyMap.UP)) {

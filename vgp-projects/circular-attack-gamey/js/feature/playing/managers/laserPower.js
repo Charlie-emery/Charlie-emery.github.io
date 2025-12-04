@@ -62,7 +62,7 @@
         };
 
       function makeObject() {
-        console.log("inside makeObject");
+       
         const powerup2 = assets.makeLaserPower();
         powerup2.handleCollision = handleCollision;
         return powerup2;
