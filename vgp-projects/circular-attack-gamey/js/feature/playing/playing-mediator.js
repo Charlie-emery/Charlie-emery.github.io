@@ -36,10 +36,12 @@
           .spawn('#f44242'),
           
         orb = opspark.playa.orb(assets, fx, messenger)
-          .spawn(30);
+          .spawn(10);
         p = opspark.playa.powerup(assets, fx, messenger)
         .spawn(1);
       p = opspark.playa.powerup2(assets, fx, messenger)
+        .spawn(1);
+        p = opspark.playa.powerup3(assets, fx, messenger)
         .spawn(1);
      
 

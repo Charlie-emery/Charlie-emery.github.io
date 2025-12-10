@@ -55,6 +55,10 @@
       phyz.updateVelocity(this, 0, 0);
       phyz.reboundCircularAssetInArea(this, canvas);
     }
+    function updateFreezePower(event) {
+      phyz.updateVelocity(this, 0, 0);
+      phyz.reboundCircularAssetInArea(this, canvas);
+    }
 
     function updateProjectile(impact) {
       phyz.reboundCircularAssetInArea(this, canvas);
@@ -236,6 +240,30 @@
         phyz.addRandomVelocity(LaserPower, canvas);
         LaserPower.update = updateLaserPower;
         return LaserPower;
+      },
+      makeFreezePower() {
+        console.log("called makeFreezePower");
+        //  const pariPowerUp = draw.rect(50, 30, "#ff0000ff", null, null,  0,  0);
+        FreezePower = draw.circle(27, "#000000ff", null, null, null, null);
+        draw.polyStar(5, 600, 100, 0, "#ffffffff", null, null, 0, null, FreezePower);
+            draw.circle(27, "rgba(0,0,0,0)", null, null, null, null, FreezePower);
+
+            
+        
+        FreezePower.x = numz.randomIntBetween(0, canvas.width);
+        FreezePower.y = numz.randomIntBetween(0, canvas.height);
+        console.log(`rad: ${FreezePower.radius}`);
+        console.log(`den: ${FreezePower.radius / 20 * 0.5}`);
+        Object.assign(
+          FreezePower,
+          phyz.makeBody("FreezePower", {
+            density: (FreezePower.radius / 20) * 0.5,
+            volatility: FreezePower.radius * 0.0001,
+          })
+        );
+        phyz.addRandomVelocity(FreezePower, canvas);
+        FreezePower.update = updateFreezePower;
+        return FreezePower;
       },
     };
   });

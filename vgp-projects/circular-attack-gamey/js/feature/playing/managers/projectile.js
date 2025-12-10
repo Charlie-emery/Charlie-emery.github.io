@@ -69,10 +69,11 @@
           projectile.x = projectilePoint.x;
           projectile.y = projectilePoint.y;
            if(emitter.LaserPower === true){
-          projectile.scaleX = 5
-          projectile.scaleY = 5
+          projectile.scaleX = 10
+          projectile.scaleY = 10
           projectile.impact = 1000
         }
+        
           // keep a reference on the projectile to who shot the projectile //
           projectile.emitter = emitter;
 

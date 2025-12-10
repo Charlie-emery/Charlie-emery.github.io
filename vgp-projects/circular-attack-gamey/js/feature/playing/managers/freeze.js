@@ -4,7 +4,7 @@
   // create a namespace for the powerup manager //
   _.set(
     opspark,
-    "playa.powerup2",
+    "playa.powerup3",
     /**
      * Creates and returns the powerup manager.
      */
@@ -63,17 +63,17 @@
 
       function makeObject() {
        
-        const powerup2 = assets.makeLaserPower();
-        powerup2.handleCollision = handleCollision;
-        return powerup2;
+        const powerup3 = assets.makeFreezePower();
+        powerup3.handleCollision = handleCollision;
+        return powerup3;
       }
 
       function handleCollision(impact, body) {
         if (body.type === "projectile"){
           console.log('sfg')
           this.integrity = 0
-          setTimeout(function(){
-          body.emitter.LaserPower = true},5000)
+          
+          body.emitter.FreezePower = true
         }
         // don't handle collisions between powerups //
         if (body.type === this.type) return;
@@ -99,8 +99,8 @@
             });
             setTimeout(function() {
               
-  opspark.playa.powerup2(assets, fx, messenger).spawn(1)
-}, 15000)
+  opspark.playa.powerup3(assets, fx, messenger).spawn(1)
+}, 20000)
           }
         }
       }
