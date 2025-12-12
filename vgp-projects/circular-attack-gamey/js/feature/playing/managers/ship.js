@@ -54,7 +54,7 @@
             return;
           }
           if (otherBody.type === "ship") {
-            this.integrity += impact;
+           return
           }
           if (otherBody.type === "pariPowerUp") {
             ship.pariPowerUp = true;
@@ -66,7 +66,7 @@
           if (otherBody.type === "projectile" && ship.pariPowerUp === true) {
             otherBody.velocityX = otherBody.velocityX * -1;
             otherBody.velocityY = otherBody.velocityY * -1;
-            this.integrity += impact;
+            return
           }
           // } else if (ship.pariPowerUp === false) {
           //   this.integrity -= impact*100;

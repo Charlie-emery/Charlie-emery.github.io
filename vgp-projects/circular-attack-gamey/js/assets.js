@@ -187,12 +187,12 @@
       makePariPowerUp() {
         console.log("called makePariPowerUp");
         //  const pariPowerUp = draw.rect(50, 30, "#ff0000ff", null, null,  0,  0);
-        pariPowerUp = draw.circle(27, "#33ff00ff", null, null, null, null);
-        draw.polyStar(7, 3, 3, 0, "#ff0000ff", null, null, 13, null, pariPowerUp);
-          draw.polyStar(4, 3, 4, 180, "#0091ffff", null, null, -15, 0, pariPowerUp);
-        draw.rect(28, 30, "#33ff00ff", null, null, -15, -15, pariPowerUp);
-          draw.polyStar(5, 4, 5, 0, "#ff0000ff", null, null, -10, 0, pariPowerUp);
-            draw.rect(25, 10, "#ff0000ff", null, null, -10, -5, pariPowerUp);
+        pariPowerUp = draw.circle(27, "#e0ecddff", null, null, null, null);
+        draw.polyStar(8, 2, 3, 90, "#526d75ff", null, null, 11, null, pariPowerUp);
+          draw.polyStar(4, 2, 4, 90, "#6f7552ff", null, null, -15, 0, pariPowerUp);
+        // draw.rect(22.5, 30, "#33ff00ff", null, null, -10, -15, pariPowerUp);
+          draw.polyStar(4, 2, 5, 0, "#755752ff", null, null, -8, 0, pariPowerUp);
+            draw.rect(23, 10, "#526d75ff", null, null, -10, -5, pariPowerUp);
             draw.circle(27, "rgba(0,0,0,0)", null, null, null, null, pariPowerUp);
 
             
