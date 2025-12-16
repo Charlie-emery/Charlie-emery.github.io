@@ -100,7 +100,7 @@
             setTimeout(function() {
               
   opspark.playa.powerup3(assets, fx, messenger).spawn(1)
-}, 20000)
+}, 15000)
           }
         }
       }

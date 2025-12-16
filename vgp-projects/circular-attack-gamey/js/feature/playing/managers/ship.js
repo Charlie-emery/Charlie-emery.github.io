@@ -61,7 +61,7 @@
             console.log(ship.pariPowerUp);
             setTimeout(function () {
               ship.pariPowerUp = false;
-            }, 50000);
+            }, 25000);
           }
           if (otherBody.type === "projectile" && ship.pariPowerUp === true) {
             otherBody.velocityX = otherBody.velocityX * -1;

@@ -73,7 +73,7 @@
           console.log('sfg')
           this.integrity = 0
           setTimeout(function(){
-          body.emitter.LaserPower = true},5000)
+          body.emitter.LaserPower = true},3000)
         }
         // don't handle collisions between powerups //
         if (body.type === this.type) return;
@@ -100,7 +100,7 @@
             setTimeout(function() {
               
   opspark.playa.powerup2(assets, fx, messenger).spawn(1)
-}, 15000)
+}, 10000)
           }
         }
       }

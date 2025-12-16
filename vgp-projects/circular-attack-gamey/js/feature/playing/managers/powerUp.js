@@ -65,7 +65,7 @@
       function makeObject() {
         console.log("inside makeObject");
         const powerup = assets.makePariPowerUp();
-        pariPowerUp.integrity = 100
+        pariPowerUp.integrity = 25
         powerup.handleCollision = handleCollision;
         return powerup;
       }
