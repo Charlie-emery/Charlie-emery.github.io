@@ -61,8 +61,10 @@ _.first = function (arr, num) {
   }
   if (typeof num !== "number") {
     return arr[0];
+  } else if (num < 0) {
+    return [];
   } else {
-    my_array.slice(0, num);
+    return arr.slice(0, num);
   }
 };
 /** _.first
@@ -82,7 +84,20 @@ _.first = function (arr, num) {
  *   _.first(["a", "b", "c"], 1) -> "a"
  *   _.first(["a", "b", "c"], 2) -> ["a", "b"]
  */
-
+_.last = function (arr, num) {
+  if (!Array.isArray(arr)) {
+    return [];
+  }
+  if (typeof num !== "number" || num === null) {
+    return arr[arr.length - 1];
+  } else if (num < 0) {
+    return [];
+  } else if (num >= arr.length) {
+    return arr;
+  } else {
+    return arr.slice(num - 1, arr.length);
+  }
+};
 /** _.last
  * Arguments:
  *   1) An array
@@ -100,7 +115,7 @@ _.first = function (arr, num) {
  *   _.last(["a", "b", "c"], 1) -> "c"
  *   _.last(["a", "b", "c"], 2) -> ["b", "c"]
  */
-
+_.indexOf = function (arr, val) {};
 /** _.indexOf
  * Arguments:
  *   1) An array

@@ -109,27 +109,19 @@ stage.update()
    * changes to assets, it must call stage.update(); 
    */
   function update(event){
-    leftM.x += speedL
-    leftEye.x += speedL
-    leftP.x += speedL
-     rightM.x += speedR
     rightEye.x += speedR
     rightP.x += speedR
-    
-    if (leftEye.x >= 220){
-     speedL = -speedL
-   }
-   if(leftEye.x < 0){
-  
-  speedL = -speedL  
-  }
-    if (rightEye.x <= -220){
-     speedR = -speedR
-   }
-   if(rightEye.x > 0){
-  
-  speedR = -speedR
-  }
+     function handleKeyDown(event) {
+    console.log(event.which);
+    if (event.which === KEY.UP) {
+      walker.speedY = -5;
+    }
+    if (event.which === KEY.LEFT) {
+      walker.speedX = -5;
+    }
+    if (event.which === KEY.DOWN) {
+      walker.speedY = 5;
+    }
    
     
     stage.update();ghg
