@@ -9,6 +9,25 @@ var _ = {};
  * START OF OUR LIBRARY!
  * Implement each function below it's instructions
  */
+/** _.typeOf
+ * Arguments:
+ *   1) Any value
+ * Objectives:
+ *   1) Return the type of <value> as a string
+ *       Types are one of:
+ *          - "string"
+ *          - "array"
+ *          - "object"
+ *          - "undefined"
+ *          - "number"
+ *          - "boolean"
+ *          - "null"
+ *          - "function"
+ * Examples:
+ * _.typeOf(134) -> "number"
+ * _.typeOf("javascript") -> "string"
+ * _.typeOf([1,2,3]) -> "array"
+ */
 _.typeOf = function (value) {
   if (typeof value === "string") {
     return "string";
@@ -34,27 +53,24 @@ _.typeOf = function (value) {
   if (typeof value === "function") {
     return "function";
   }
+  /** _.first
+   * Arguments:
+   *   1) An array
+   *   2) A number
+   * Objectives:
+   *   1) If <array> is not an array, return []
+   *   2) If <number> is not given or not a number, return just the first element in <array>.
+   *   3) Otherwise, return the first <number> items of <array>
+   * Edge Cases:
+   *   1) What if <number> is negative?
+   *   2) What if <number> is greater than <array>.length?
+   * Examples:
+   *   _.first("ponies", 1) -> []
+   *   _.first(["a", "b", "c"], "ponies") -> "a"
+   *   _.first(["a", "b", "c"], 1) -> "a"
+   *   _.first(["a", "b", "c"], 2) -> ["a", "b"]
+   */
 };
-/** _.typeOf
- * Arguments:
- *   1) Any value
- * Objectives:
- *   1) Return the type of <value> as a string
- *       Types are one of:
- *          - "string"
- *          - "array"
- *          - "object"
- *          - "undefined"
- *          - "number"
- *          - "boolean"
- *          - "null"
- *          - "function"
- * Examples:
- * _.typeOf(134) -> "number"
- * _.typeOf("javascript") -> "string"
- * _.typeOf([1,2,3]) -> "array"
- */
-
 _.first = function (arr, num) {
   if (!Array.isArray(arr)) {
     return [];
@@ -65,37 +81,6 @@ _.first = function (arr, num) {
     return [];
   } else {
     return arr.slice(0, num);
-  }
-};
-/** _.first
- * Arguments:
- *   1) An array
- *   2) A number
- * Objectives:
- *   1) If <array> is not an array, return []
- *   2) If <number> is not given or not a number, return just the first element in <array>.
- *   3) Otherwise, return the first <number> items of <array>
- * Edge Cases:
- *   1) What if <number> is negative?
- *   2) What if <number> is greater than <array>.length?
- * Examples:
- *   _.first("ponies", 1) -> []
- *   _.first(["a", "b", "c"], "ponies") -> "a"
- *   _.first(["a", "b", "c"], 1) -> "a"
- *   _.first(["a", "b", "c"], 2) -> ["a", "b"]
- */
-_.last = function (arr, num) {
-  if (!Array.isArray(arr)) {
-    return [];
-  }
-  if (typeof num !== "number" || num === null) {
-    return arr[arr.length - 1];
-  } else if (num < 0) {
-    return [];
-  } else if (num >= arr.length) {
-    return arr;
-  } else {
-    return arr.slice(num - 1, arr.length);
   }
 };
 /** _.last
@@ -115,7 +100,20 @@ _.last = function (arr, num) {
  *   _.last(["a", "b", "c"], 1) -> "c"
  *   _.last(["a", "b", "c"], 2) -> ["b", "c"]
  */
-_.indexOf = function (arr, val) {};
+_.last = function (arr, num) {
+  if (!Array.isArray(arr)) {
+    return [];
+  }
+  if (typeof num !== "number" || num === null) {
+    return arr[arr.length - 1];
+  } else if (num < 0) {
+    return [];
+  } else if (num >= arr.length) {
+    return arr;
+  } else {
+    return arr.slice(num - 1, arr.length);
+  }
+};
 /** _.indexOf
  * Arguments:
  *   1) An array
@@ -131,6 +129,17 @@ _.indexOf = function (arr, val) {};
  *   _.indexOf(["a","b","c"], "c") -> 2
  *   _.indexOf(["a","b","c"], "d") -> -1
  */
+_.indexOf = function (arr, val) {
+  for (var i = 0; i < arr.length; i++) {
+    if (arr[i] === val) {
+      return i;
+    }
+  }
+
+  if (!Array.isArray(val)) {
+    return -1;
+  }
+};
 
 /** _.contains
  * Arguments:
@@ -146,7 +155,14 @@ _.indexOf = function (arr, val) {};
  *   _.contains([1,"two", 3.14], "two") -> true
  *   _.contains([1,"two", 3.14], "three") -> false
  */
-
+_.contains = function (arr, val) {
+  for (let i = 0; i < arr.length; i++) {
+    if (arr[i] === val) {
+      return true;
+    }
+  }
+  return false;
+};
 /** _.each
  * Arguments:
  *   1) A collection
@@ -162,7 +178,17 @@ _.indexOf = function (arr, val) {};
  *   _.each(["a","b","c"], function(e,i,a){ console.log(e); });
  *      -> should log "a" "b" "c" to the console
  */
-
+_.each = function (coll, func) {
+  if (Array.isArray(coll) === true) {
+    for (let i = 0; i < coll.length; i++) {
+      func(coll[i], i, coll);
+    }
+  } else if (typeof coll === "object") {
+    for (const key in coll) {
+      func(coll[key], key, coll);
+    }
+  }
+};
 /** _.filter
  * Arguments:
  *   1) An array
@@ -180,6 +206,15 @@ _.indexOf = function (arr, val) {};
  *   use _.each in your implementation
  */
 
+_.filter = function (arr, func) {
+  let arr2 = [];
+  _.each(arr, function (e, i, a) {
+    if (func(e, i, a) === true) {
+      arr2.push(e);
+    }
+  });
+  return arr2;
+};
 /** _.map
  * Arguments:
  *   1) A collection
@@ -196,6 +231,19 @@ _.indexOf = function (arr, val) {};
  * Examples:
  *   _.map([1,2,3,4], function(e){ return e * 2; }) -> [2,4,6,8]
  */
+_.map = function (coll, func) {
+  let arr = [];
+  if (Array.isArray(coll) === true) {
+    for (let i = 0; i < coll.length; i++) {
+      arr.push(func(coll[i], i, coll));
+    }
+  } else if (typeof coll === "object") {
+    for (const key in coll) {
+      arr.push(func(coll[key], key, coll));
+    }
+  }
+  return arr;
+};
 
 /** _.reject
  * Arguments:
@@ -212,7 +260,15 @@ _.indexOf = function (arr, val) {};
  * Examples:
  *   _.reject([1,2,3,4,5], function(e){ return e%2 === 0}; ) -> [1,3,5]
  */
-
+_.reject = function (arr, func) {
+  let arr2 = [];
+  _.each(arr, function (e, i, a) {
+    if (func(e, i, a) === false) {
+      arr2.push(e);
+    }
+  });
+  return arr2;
+};
 /** _.partition
 * Arguments:
 *   1) An array
@@ -231,7 +287,22 @@ _.indexOf = function (arr, val) {};
 *   }); -> [[2,4],[1,3,5]]
 }
 */
+_.partition = function (arr, func) {
+  let arr1 = [];
+  let arr2 = [];
+  let coll = [arr1, arr2];
+  _.each(arr, function (e, i, a) {
+    if (func(e, i, a) === true) {
+      arr1.push(e);
+    }
+    if (func(e, i, a) === false) {
+      arr2.push(e);
+    }
+  });
 
+  return coll;
+  // return [_.filter(arr, func), _.reject(arr,func)]
+};
 /** _.every
  * Arguments:
  *   1) A collection
@@ -253,7 +324,19 @@ _.indexOf = function (arr, val) {};
  *   _.every([2,4,6], function(e){ return e % 2 === 0}; ) -> true
  *   _.every([1,2,3], function(e){ return e % 2 === 0}; ) -> false
  */
-
+_.every = function (coll, func) {
+  let allTrue = true;
+  _.each(coll, function (e, i, a) {
+    if (typeof func !== "function") {
+      if (!!e === false) {
+        allTrue = false;
+      }
+    } else if (func(e, i, a) === false) {
+      allTrue = false;
+    }
+  });
+  return allTrue;
+};
 /** _.some
  * Arguments:
  *   1) A collection
@@ -275,7 +358,19 @@ _.indexOf = function (arr, val) {};
  *   _.some([1,3,5], function(e){ return e % 2 === 0}; ) -> false
  *   _.some([1,2,3], function(e){ return e % 2 === 0}; ) -> true
  */
-
+_.some = function (coll, func) {
+  let someTrue = false;
+  _.each(coll, function (e, i, a) {
+    if (typeof func !== "function") {
+      if (!!e === true) {
+        someTrue = true;
+      }
+    } else if (func(e, i, a) === true) {
+      someTrue = true;
+    }
+  });
+  return someTrue;
+};
 /** _.pluck
  * Arguments:
  *   1) An array of objects
