@@ -14,13 +14,18 @@ const server = http
         res.on("data", function () {
           body += data;
         });
-        res.on(end);
+        res.on("end", function () {
+          serverStatus = {}
+          serverStatus.status = JSON.parse(body)
+           res.writeHead(200, { "Content-Type": "text/plain" });
+           res.write("The server has been updated");
+        });
       }
     } catch {
       res.writeHead(500, { "Content-Type": "text/plain" });
       res.write("The server has no data");
     } finally {
-      res.write("-and the message arrived");
+      res.write(serverStatus.status + "-and the message arrived");
       res.end();
     }
   })
