@@ -7,25 +7,29 @@ const server = http
   .createServer(function (req, res) {
     try {
       if (req.method === "GET") {
-        res.write(serverStatus.status);
         res.writeHead(200, { "Content-Type": "text/plain" });
+        res.write(JSON.stringify(serverStatus.status));
       } else if (req.method === "PUT") {
         let body = "";
-        res.on("data", function () {
-          body += data;
+        req.on("data", function (chunk) {
+          body += chunk;
         });
-        res.on("end", function () {
-          serverStatus = {}
-          serverStatus.status = JSON.parse(body)
-           res.writeHead(200, { "Content-Type": "text/plain" });
-           res.write("The server has been updated");
+        req.on("end", function () {
+          serverStatus = {};
+          serverStatus.status = JSON.parse(body);
+          console.log("fuyrn");
         });
+        res.writeHead(200, { "Content-Type": "text/plain" });
+        res.write("The server has been updated");
+      } else if (req.method === "DELETE") {
       }
-    } catch {
-      res.writeHead(500, { "Content-Type": "text/plain" });
-      res.write("The server has no data");
+    } catch (e) {
+      console.log(e);
+      res.statusCode = 500;
+      // res.writeHead(500, { "Content-Type": "text/plain" });
+      res.write("The server has no data ");
     } finally {
-      res.write(serverStatus.status + "-and the message arrived");
+      res.write(" -and the message arrived");
       res.end();
     }
   })
