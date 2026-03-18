@@ -3,7 +3,7 @@
 ///////////////////////////////////////////////////////////
 $(document).ready(function () {
   // Chart initialization code
-  var maxDataPoints = 10;
+  var maxDataPoints = 100;
 
   // Setup to use charts
   google.charts.load("current", { packages: ["corechart"] });
@@ -128,12 +128,13 @@ $(document).ready(function () {
         type.lowest = value;
         $(type.lowID).text(`Lowest recorded value is ${type.lowest}`);
       }
+      // console.log({ value, lowest: type.lowest, highest: type.highest });
     }
 
     // TODO 5: Simulation JSON Polling
     function doJSONPoll() {
       $.getJSON("http://localhost:8080/", function (result) {
-        addDataPoint(result.value.toFixed(2), jsonSimData, jsonSimChart);
+        addDataPoint(result, jsonSimData, jsonSimChart);
         updateRecords(result.value.toFixed(2), jsonSim);
       });
     }
@@ -143,16 +144,62 @@ $(document).ready(function () {
 
     socket.onmessage = function (event) {
       var result = JSON.parse(event.data);
-      addDataPoint(result, wsData, wsChart);
-      updateRecords(result.value, wsSim);
+      addDataPoint(result, wsSimData, wsSimChart);
+      updateRecords(result.value.toFixed(2), wsSim);
     };
 
     socket.onerror = function (error) {
       console.error("WebSocket error:", error);
     };
     // TODO 8: Purple Air JSON Polling
+    function doPurpleAirAJAXPollTemp() {
+      var settings = {
+        url: "https://api.purpleair.com/v1/sensors/26803?fields=temperature",
+        method: "GET",
+        timeout: 0,
+        headers: {
+          Accept: "application/json",
+          "x-api-key": "place holder",
+        },
+      };
+      $.ajax(settings)
+        .done(function (response) {
+          let i = {
+            value: response.sensor.temperature,
+          };
+          addDataPoint(i, ajaxTempData, ajaxTempChart);
+          updateRecords(response.sensor.temperature.toFixed(2), ajaxTemp);
+        })
+        .fail(function (jqXHR, textStatus, error) {
+          console.error("AJAX error:", error);
+        });
+    }
+    setInterval(doPurpleAirAJAXPollTemp, 30_000);
 
     // TODO 9: AJAX Polling
+    function doPurpleAirAJAXPollAir() {
+      var settings = {
+        url: "https://api.purpleair.com/v1/sensors/26803?fields=pm2.5",
+        method: "GET",
+        timeout: 0,
+        headers: {
+          Accept: "application/json",
+          "x-api-key": "place holder",
+        },
+      };
+      $.ajax(settings)
+        .done(function (response) {
+          let i = {
+            value: response.sensor["pm2.5"],
+          };
+          addDataPoint(i, ajaxAirData, ajaxAirChart);
+          updateRecords(response.sensor["pm2.5"].toFixed(2), ajaxAir);
+        })
+        .fail(function (jqXHR, textStatus, error) {
+          console.error("AJAX error:", error);
+        });
+    }
+    setInterval(doPurpleAirAJAXPollAir, 30_000);
 
     // Do not work below this line
     function getTime() {
