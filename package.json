@@ -1,6 +1,12 @@
 {
   "dependencies": {
     "async": "^3.2.6",
+    "cors": "^2.8.6",
+    "epoll": "^4.0.2",
+    "express": "^5.2.1",
+    "node-dht-sensor": "^0.4.5",
+    "onoff": "^6.0.3",
+    "spi-device": "^3.1.2",
     "ws": "^8.19.0"
   }
 }
