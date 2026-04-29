@@ -1,532 +1,392 @@
-# iot-automatic-routing
+# first-slice-of-pi-mq
 
-### Automate route creation for your Pi server
+set up routes for a server that handles multiple devices attached to a Pi
 
 **Table of Contents**
 
 - [Setup](#setup)
-- [Grading](#grading)
+- [Important Information](#important-information)
 - [Lesson Steps](#lesson-steps)
-  - [TODO 1: Use Automation](#todo-1-use-automation)
-  - [TODO 2: createRouter Function](#todo-2-createrouter-function)
-  - [TODO 3: generateRoute Function](#todo-3-generateroute-function)
-  - [TODO 4: populateLinks Function](#todo-4-populatelinks-function)
-  - [TODO 5: Update the Converter](#todo-5-update-the-converter)
-  - [Challenge: Automate Parent Links](#challenge-automate-parent-links)
+  - [TODO 1: Study the File Structure](#todo-1-study-the-file-structure)
+  - [TODO 2: Initial HTTP Server Setup](#todo-2-initial-http-server-setup)
+  - [TODO 3: Sensor Routes](#todo-3-sensor-routes)
+  - [TODO 4: Actuator Routes](#todo-4-actuator-routes)
+  - [TODO 5: MQ Plugin](#todo-5-mq-plugin)
+  - [TODO 6: DHT Plugin](#todo-6-dht-plugin)
 
-<br><br>
+## Cloning Steps
+
+To clone this project down to your Pi so that you can work on it locally, run the following commands from a terminal on your Pi:
+
+```
+cd ~
+cd <your github repository>
+cd iot-projects
+git clone https://github.com/OperationSpark/first-slice-of-pi-mq.git
+cd first-slice-of-pi-mq
+rm -rf .git*
+```
+
+This will pull down this project from GitHub to your Pi so that you can `cd` into the project and begin working on it.
 
 ## Setup
 
-- This project should be completed on your Pi. **DO NOT WORK ON THIS PROJECT UNTIL PI-INYOURFACE IS COMPLETED**
-- Open a new terminal on your Pi (putty or otherwise).
-- Enter the command `cd <your GitHub repository's name>` to enter your repository directory.
-- Enter the command `cd iot-projects` to enter your `iot-projects` directory.
-- Enter the command `cp -r pi-inyourface/* automatic-routing` to copy your completed pi-inyourface's work into the automatic-routing directory.
-- Enter the command `cd automatic-routing` to enter the new project's directory.
-- Run the command:
-  ```bash
-  npm install websocket ws lodash onoff node-dht-sensor express cors epoll body-parser xmlhttprequest node-json2html
-  ```
-- Run the command:
-  ```bash
-  git add .
-  git commit -m "Setup automatic-routing project"
-  git push
-  ```
+- If you have not already done so, cd into your GitHub repository's `iot-projects/first-slice-of-pi-mq` to enter this project's directory
+- Run the following command to install the libraries we will be using during this project:
 
-<br><br>
+```bash
+npm install onoff node-dht-sensor express cors epoll spi-device
+```
 
-## Grading
+## Push Reminder
 
-| Requirement                        | Description                                   | Points |
-| ---------------------------------- | --------------------------------------------- | ------ |
-| **TODO 1: Use Automation**         | Set up the framework for route automation     | 10%    |
-| **TODO 2: createRouter Function**  | Build a function to automate route creation   | 10%    |
-| **TODO 3: generateRoute Function** | Build a function for resource-specific routes | 30%    |
-| **TODO 4: populateLinks Function** | Automate link generation for navigation       | 25%    |
-| **TODO 5: Update the Converter**   | Modify the converter to handle links          | 25%    |
+To push to GitHub, enter the following commands in bash:
 
-<br><br>
+```bash
+git add -A
+git commit -m "saving first slice of Pi"
+git push
+```
 
 ## Lesson Steps
 
-This project is the final part of the multi-project undertaking that is setting up a server to allow others to interface with your Pi. For this project, you will:
+This project is the first of several that will work together to bake a fully-fledged Raspberry Pi system. There will be a lot of pieces all working together, so while you're working, do your best to keep track of how everything interconnects. It might seem daunting at first with a total of eight files and several folders organizing those files, but learning how each piece relates to one another now will make the next few projects much simpler.
 
-- Automate the creation of routes for handling sensor and actuator resources.
-- Automatically generate navigation links in responses for easier exploration of your Pi’s resources.
-- Refactor existing functionality to reduce redundancy and improve maintainability.
+## Important Information
 
-By the end of this project, your server will be highly efficient, with automated routing and enhanced response headers for seamless navigation. Let’s get started! 🚀
+You must keep your working code on your Pi. However, you can edit your code on any machine. We recommend programming on your Pi, but if you prefer to use a different coding environment, you may do so, and then you can use GitHub (or other methods like scp) to move your changes to your Pi for testing.
 
-<br><br>
+**To test your code (AFTER completing TODO 2 and on),** you will need to follow the following steps.
 
-### Step-by-Step Work Flow
+1. Make certain that your terminal (on your Pi) is in your project directory. `cd` into it if you are not.
+2. Run the command `node wot-server.js`
+3. Open your browser and go to your Pi's URL. Then you will need to enter `<your Pi's IP address>:8484` into the URL bar (`192.168.1.249:8484`, for example).
 
-1. 📂 **Open the `automatic-routing` directory** to begin automating your server.
+> **IMPORTANT NOTE:** If you are using the browser that runs on your actual Pi, then you can substitute `<your Pi's IP address>` with `localhost` instead.
 
-   - 🔍 In your file tree, navigate to the `iot-projects` folder.
-   - Open the `automatic-routing` folder 📂 within the projects directory.
+### TODO 1: Study the File Structure
 
-2. **Follow each TODO carefully** as you implement automation and navigation features:
+As mentioned, there are eight files that all work together. Skeletons for all of these files (and in some cases the entire file) have already been provided for you. Before you begin working in them, study how each of these files connects to one another so that you are familiar with the layout and dependencies between files. Below is a brief summary.
 
-   - For each TODO, pay attention to the instructions provided in the code.
-   - Only code in the specified areas to avoid breaking your program.
+- The **`resources`** directory contains two files.
+  - **`resources.json`** is a JSON file that represents your device. Assuming you have your Pi and its connected hardware set up the way that the [Hardware Setup](https://github.com/OperationSpark/hardware-setup) project instructed, this file is accurate and should not be changed.
+    > **IMPORTANT:** If you have set up your Pi's connected hardware differently than as described in the `hardware setup` project, then you should ask your instructor to help update the `resources.json` file.
+  - **`model.js`** serves to export the resources.json file for use by all other files.
 
-3. 🖥️ **Test your server frequently** to ensure that automation and navigation features work as expected.
+- The **`plugins`** directory contains the **`internal`** directory, which in turn contains two files. These files are what manage the behavior of your sensors (and later LEDs).
+  - The **`dhtPlugin.js`** file holds the code for the plugin that manages your DHT sensor.
+  - The **`mqPlugin.js`** file holds the code for the plugin that manages your MQ sensor.
 
----
+- The **`routes`** directory contains files that handle routing to your sensors, actuators, and intermediate routes.
+  - The **`actuators.js`** file manages access to your actuators.
+  - **`sensors.js`** manages access to your sensors.
 
-<table style="width: 80%; margin-left: auto; margin-right: auto; border-collapse: collapse; margin-top: 15px; background-color: #2c2c2c; border: 1px solid #444; border-radius: 8px; overflow: hidden;">  
-  <tr>  
-    <th style="text-align: left; padding: 10px; background-color: #444; color: #e2e2e2; border-bottom: 1px solid #666;">  
-      💡 Key Reminders  
-    </th>  
-  </tr>  
-  <tr>  
-    <td style="padding: 10px; color: #e2e2e2;">  
-      - 📖 Carefully read each TODO before you start coding.<br>  
-      - 🖥️ Test frequently to ensure your server functions as expected at each step.<br>  
-      - 🔄 Always push your changes to GitHub and pull them onto your Pi to keep your code synchronized if you’re working on multiple devices.  
-    </td>  
-  </tr>  
-</table>
+- The **`servers`** directory only contains the **`http.js`** file. This file pulls all of your routes together (plus a few of its own) and sets up your express server.
 
----
+- Lastly, the **`wot-server.js`** file is where you start your plugins and servers. This is also the file that you should run using the command `node wot-server.js` if you want to test your code. Keep in mind that this will only work properly if you are testing it on your Pi.
 
-<br>
+- **1a)** To complete this TODO, write a comment on the last line of the **`http.js`** file that says `// I have looked through all files`
 
-### ✅ **Check Your Work!**
+### TODO 2: Initial HTTP Server Setup
 
-- **After each TODO**, double-check your code against the instructions.
-- To test your server setup:
-  1. Ensure your terminal (on your Pi) is in the project directory using `cd`.
-  2. Run the command:
-     ```bash
-     node wot-server.js
-     ```
-  3. Use `curl` commands or Postman to send requests to your running server.
+This TODO will take place within the **`servers/http.js`** file. When you first open the file, all you will see are the lines to import the necessary libraries and an export line.
 
-<table style="width: 80%; margin-left: auto; margin-right: auto; border-collapse: collapse; margin-top: 15px; background-color: #2c2c2c; border: 1px solid #444; border-radius: 8px; overflow: hidden;">  
-  <tr>  
-    <th style="text-align: left; padding: 10px; background-color: #444; color: #e2e2e2; border-bottom: 1px solid #666;">  
-      ⚠️ Important Note About Testing  
-    </th>  
-  </tr>  
-  <tr>  
-    <td style="padding: 10px; color: #e2e2e2;">  
-      If a `curl` command or Postman request crashes your server, restart it in the first terminal before sending another request. Otherwise, your server will not respond to further requests.  
-    </td>  
-  </tr>  
-</table>
+Right now, there are only four Tasks you need to do in this file.
 
----
+- **2a)** Initialize the express server immediately after importing it by using the line `var app = express();`
+- **2b)** Tell your server to use CORS with `app.use(cors());`
+- **2c)** Tell the server how to handle GET requests to the root of your device. Make certain it provides an appropriate message. Putting in the generic `"Some response..."` will NOT get full credit for this step.
 
-<br>
+  > **Advice**: take a look at the following code:
+  >
+  > ```js
+  > app.get("/", function (req, res) {
+  >   res.send("Some response for accessing the root");
+  > });
+  > ```
+  >
+  > This code will tell the server how to respond to requests to the root location of `'/'` (your Pi's IP address), which is by sending back a response of `'Some response for accessing the root'`. Essentially, any time someone pings the "home page" of your Pi's URL, this is the response they will get.
 
-### TODO 1: Use Automation
+- **2d)** Tell the server how to handle GET requests to the gateway to your device. **Make certain that you send a different response than you did in the root if you want full credit.**
+  > **Advice**: you should basically do the same thing as you did for **2c**, except this time you want to handle requests to `'/pi'`, which is the top level gateway to your device. In other words, if someone pings the URL of `<your Pi's IP address>:8484/pi`, then whatever you `send` back in response is what they will receive back.
 
-🎯 **Goal:** Set up the foundation for automating route creation in your server.
+<hr>
 
----
+> **TEST YOUR CODE**
+>
+> To test your code at this point, follow the steps listed at the top of these instructions in the **Important Information** section. Then, do the following.
+>
+> 1.  Open your browser at `'<your Pi's IP address>:8484/`. If you see the text response for the root `/`, then everything up through **2c** is correct!
+> 2.  Open your browser at `'<your Pi's IP address>:8484/pi`. If you see the text response for the gateway `/pi`, then **2d** is correct as well!
 
-### Step-by-Step Instructions
+> **DO NOT PROCEED UNLESS BOTH TESTS PASS**
 
-1. **Create the `automate.js` file:**
+<hr>
 
-   - In your `routes` folder, create a new file called `automate.js`. You can do this with the command:
+### TODO 3: Sensor Routes
 
-     ```bash
-     touch routes/automate.js
-     ```
+Most of this TODO takes place in the **`routes/sensors.js`** file, though at the end you will also need to update the `http.js` file, so be sure to keep that open.
 
-   - Add the following lines to the file:
+- **3a)** Set Up Routes
+  The `sensors.js` file already imports everything you will need and also exports the constructed router. Your job will be to establish all of the possible sensor routes, of which there are five.
 
-     ```javascript
-     // first line
-     const express = require("express");
+  > **READ:** The first route is the sensors root, or `'/'`. **This is not to be confused with the `'/'` route in the `http.js` file.** Because of how we will update the `http.js` file at the end of this TODO, the path to the sensors root is inherent to any of the defined sensor routes, meaning that `'/'` actually refers to `'<your Pi's IP address>:8484/pi/sensors/'`.
 
-     // last line
-     module.exports = createRouter;
-     ```
+  > **CODE:** Create the five routes and have them return the data stored in the model as defined by `resources.json` and `model.js`. For example, the routes to `'/'` and `'/dht'` (meaning `'/pi/sensors/'` and `'/pi/sensors/dht'`, respectively) would be defined by:
+  >
+  > ```js
+  > router.route("/").get(function (req, res, next) {
+  >   res.send(resources.pi.sensors);
+  > });
+  >
+  > router.route("/dht").get(function (req, res, next) {
+  >   res.send(resources.pi.sensors.dht);
+  > });
+  > ```
+  >
+  > In addition to those two routes, you should also include routes to `'/dht/temperature'`, `'/dht/humidity'`, and `'/mq'`. That means **there should be a total of five routes in this file when you are done.**
 
-   - You’ll expand this file in the next TODOs, but for now, ensure it exists and contains these lines.
+- **3b)** Update HTTP Server
+  Once you have all the routes in place, go back into the `http.js` file and add in two things.
+  - **3b-1)** At the top of the file, you need to import the routes using `var sensorRoutes = require('./../routes/sensors');`.
+    > **READ:** The single `'.'` at the beginning of the string says that the program is looking for the specified file using a relative file path, and the `'..'` says that it needs to start looking in the parent directory of the current file (i.e. one level up from the servers directory).
+  - **3b-2)** Just below the already existing line of `app.use(cors());`, add in the line `app.use('/pi/sensors', sensorRoutes);`. This tells the server that it should route all requests to `'<your Pi's IP>:8484/pi/sensors'` and its sub-destinations (e.g. `'<your Pi's IP>:8484/pi/sensors/mq'`) through the sensor routes you just defined.
 
----
+<hr>
 
-2. **Update your `actuators.js` file:**
+> **TEST YOUR CODE**
+>
+> To test your code at this point, follow the steps listed at the top of these instructions in the **Important Information** section. Then, do the following.
+>
+> 1.  Open your browser at `'<your Pi's IP address>:8484/pi/sensors`
+> 2.  Open your browser at `'<your Pi's IP address>:8484/pi/sensors/dht`
+> 3.  Open your browser at `'<your Pi's IP address>:8484/pi/sensors/dht/temperature`
+> 4.  Open your browser at `'<your Pi's IP address>:8484/pi/sensors/dht/humidity`
+> 5.  Open your browser at `'<your Pi's IP address>:8484/pi/sensors/mq'`
+>
+> All of the above URLs should display an object. If you see either a blank page or an error, then it means that the corresponding route was not configure correctly and you should double check what you have written in your code.
 
-   - Since you’ll automate `GET` routes, remove all existing `GET` route handlers from your `actuators.js` file, keeping only the `PUT` request handler.
+**DO NOT PROCEED UNLESS ALL TESTS PASS**
 
-   - After updating, your file should look similar to this:
+<hr>
 
-     ```javascript
-     const express = require("express"),
-       router = express.Router(),
-       resources = require("./../resources/model"),
-       ledsPlugin = require("./../plugins/internal/ledsPlugin");
+### TODO 4: Actuator Routes
 
-     router.route("/leds/:id").put(function (req, res, next) {
-       var selectedLed = resources.pi.actuators.leds[req.params.id];
-       selectedLed.value = req.body.value;
-       req.result = selectedLed;
-       ledsPlugin.switchOnOff[req.params.id](req.body.value);
-       next();
-     });
+Most of this TODO takes place in the **`routes/actuators.js`** file, though at the end you will also need to update the `http.js` file, so be sure to keep that open. You are essentially doing the same thing that you did with the sensors, but there is one part that can/should be handled differently.
 
-     module.exports = router;
-     ```
+<hr>
 
-   > **NOTE:** Your implementation may vary slightly from the example above, depending on how you initially wrote your `actuators.js` file. Just ensure the `PUT` handler is intact, and all `GET` handlers are removed.
+- **4a)** Set Up Routes
 
----
+  The `actuators.js` file has the same initial setup as the `sensors.js` file. Setting up the routes here is similar, as well.
 
-3. **Update the `http.js` file:**
+- **4a-1)** Set up the `'/'` and `'/leds'` routes the same way you set up all of the _sensors_ routes.
 
-   - Disconnect the `http.js` file from manually created sensor routes and connect it to the new route automation system. Make the following changes:
+- **4a-2)** Once you've put in the routes for `'/'` and `'/leds'`, you can handle the `'/leds/1'` and `'/leds/2'` routes at the same time using the following code:
 
-     1. **Comment out or delete** the line that imports `sensors.js`.
-     2. **Comment out or delete** the line:
-        ```javascript
-        app.use("/pi/sensors", sensorRoutes);
-        ```
-     3. **Comment out or delete** the `app.get` lines for `'/'` and `'/pi'`.
-     4. Add the following line at the top of the file:
-        ```javascript
-        const createRouter = require("./../routes/automate");
-        ```
-     5. Add the following line (if it doesn’t already exist):
-        ```javascript
-        const resources = require("./../resources/model");
-        ```
-     6. Just above the line where you call `app.use(converter())`, add:
-        ```javascript
-        app.use("/", createRouter(resources));
-        ```
+  ```js
+  router.route("/leds/:id").get(function (req, res, next) {
+    res.send(resources.pi.actuators.leds[req.params.id]);
+  });
+  ```
 
-   > **READ:** The first three steps remove the manual setup for sensor routes, while the final steps import and connect the server to the route automation system you’ll build in the next TODO.
+  > **READ:** The ":id" of the URL registered with the router lets you put any number into that part of the URL. You can then retrieve that number in your `.get` function using `req.params.id`. This lets you register a single route for all of your leds, since the leds are only differentiated by their number.
 
-   > **IMPORTANT:** Testing will not be possible until **TODO 2** is complete. Be meticulous to avoid errors!
+<hr>
 
-<br><br><br><br>
+- **4b)** Update HTTP Server
+  Once you have all the routes in place, then back in the `http.js` file, you once again need to add in two things.
 
-### TODO 2: createRouter Function
+- **4b-1)** Import the routes using `var actuatorRoutes = require('./../routes/actuators');`.
+- **4b-2)** Tell the server to route all requests to `'/pi/actuators'` and sub-destinations through your actuator router (like how you used `app.use('/pi/sensors', sensorRoutes);` for the sensor routes).
 
-🎯 **Goal:** Build the foundational function for automating route creation. This function initializes the router and prepares it to dynamically create routes.
+<hr>
 
----
+> **TEST YOUR CODE**
+>
+> To test your code at this point, follow the steps listed at the top of these instructions in the **Important Information** section. Then, do the following.
+>
+> 1.  Open your browser at `'<your Pi's IP address>:8484/pi/actuators`
+> 2.  Open your browser at `'<your Pi's IP address>:8484/pi/actuators/leds`
+> 3.  Open your browser at `'<your Pi's IP address>:8484/pi/actuators/leds/1`
+> 4.  Open your browser at `'<your Pi's IP address>:8484/pi/actuators/leds/2`
+>
+> All of the above URLs should display a condensed object. If you see either a blank page or an error, then it means that the corresponding route was not configure correctly and you should double check what you have written in your code.
 
-### Step-by-Step Instructions
+**DO NOT PROCEED UNLESS ALL TESTS PASS**
 
-1. **Create the `createRouter` function:**
+### TODO 5: MQ Plugin
 
-   - **Name:** `createRouter`
-   - **Parameters:** A single object called `rootResource`
-   - **Returns:** A router object
+Currently, you have your server set up to send responses to any GET request your Pi receives, but the data it sends back will not be current. That's because you never set up a connection with any of the hardware (DHT, MQ, or LEDs). We will ignore the LEDs for this project, but both the MQ and DHT sensors need to be handled now. Let's start with the MQ.
 
-   - **Description:** This function should:
-     1. Create a new router using `express.Router()` and assign it to a variable with an appropriate name (e.g., `router`).
-     2. Call the route automation function. For now, add a placeholder comment:
-        ```javascript
-        // call generateRoute here
-        ```
-     3. Return the router you created.
+In the **`plugins/internal/mqPlugin.js`** file, you will see that the resource model has already been imported and some basic variables defined. One important variable is the `device` variable, which comes from the imported resource model. This contains all of the information about the MQ sensor, and it can be updated using this plugin.
 
----
+Also note that the `spi-device` library has been imported, which you will use to connect to and manage interactions with the MQ sensor.
 
-### ✅ **Check Your Work!**
+Your goal will be to create three functions, then update **`wot-server.js`** to make use of the plugin once it's ready.
 
-1. To verify that your router is being created correctly, add a `console.log` statement inside your `createRouter` function. For example:
+<hr>
 
-```javascript
-console.log("Router created successfully");
-```
+- **5a)** Create the following function:
+  - **Name:** `connectHardware`
+  - **Parameters:** None
+  - **Returns:** Nothing
+  - **Description:** This function should create a new SPI connection with `spi.openSync(0, 0, { maxSpeedHz: 1350000 })`, and save the connection in the `device` variable (it should not make a new `device` variable, as this variable already exists in the global scope).
 
-2. Start your server with:
+<hr>
 
-```bash
-node wot-server.js
-```
+- **5b)** Create the following function:
+  - **Name:** `start`
+  - **Parameters:** None
+  - **Returns:** Nothing
+  - **Description:** This function should:
+    1. Call `connectHardware()`.
+    2. Start a polling interval (using `setInterval`) that will call `readSensor()` every `POLL_MS` milliseconds so that the MQ sensor is read on a regular basis.
 
-3. You should see your message in the terminal output, confirming that the `createRouter` function is running without errors.
+  > **IMPORTANT:** After creating this function, put the line `exports.start = start;` at the end of your program. This **exports** the function, which means other files can use the function if they `require` it.
 
-> NOTE: At this point, your server won't generate any routes yet, but seeing the log message ensures your router initialization is working as expected.
+<hr>
 
-<br><br><br><br>
+- **5c)** Create the following function:
+  - **Name:** `stop`
+  - **Parameters:** None
+  - **Returns:** Nothing
+  - **Description:** This function should call `device.closeSync()` and clear the polling interval so that the MQ sensor is no longer being read (use `clearInterval(interval)`).
 
-### TODO 3: generateRoute Function
+  > **IMPORTANT:** After creating this function, put the line `exports.stop = stop;` at the end of your program.
 
-🎯 **Goal:** Automate route creation for all resources on your Pi server, dynamically linking resources and subresources.
+<hr>
 
----
+- **5d)** Update wot-server.js
+  - **5d-1)** In `wot-server.js`, import the MQ plugin. This should be done at the same place that all other imports are listed, and it can be done with the line:
 
-### Step-by-Step Instructions
+    ```js
+    var mqPlugin = require("./plugins/internal/mqPlugin");
+    ```
 
-1. **Create the `generateRoute` function:**
+  - **5d-2)** Next, start the plugin with the command `mqPlugin.start();`. **Make sure that you start the plugin _before_ you start the server!**
 
-   - **Name:** `generateRoute`
-   - **Parameters:**
-     - `router` (the router being used).
-     - `resource` (the current resource being routed).
-   - **Returns:** Nothing
+  - **5d-3)** Finally, in `process.on()`'s callback function, add the line
 
-   - **Description:** This function will create routes dynamically for any resource with an associated link and will handle recursive routing for subresources.
+    ```js
+    mqPlugin.stop();
+    ```
 
-   - **Steps:**
-     1. Define the function but leave the body empty for now.
-     2. Go back to your `createRouter` function and call `generateRoute`, passing in the new router and the `rootResource` as arguments. Remove any placeholder comments about calling this function.
+    to just before the call to `process.exit()`.
 
-2. **Check if a link exists for the resource:**
+<hr>
 
-   - Inside the `generateRoute` function, verify if the `link` property exists on the `resource` object. If `resource.link` is `undefined`, skip the route creation for that resource.
+> **TEST YOUR CODE**
+>
+> To test your code at this point, follow the steps listed at the top of these instructions in the **Important Information** section. Then, do the following.
+>
+> 1.  Open your browser at `'<your Pi's IP address>:8484/pi/sensors/mq'`.
+> 2.  Mess with the MQ sensor. Assuming it is hooked up correctly, it should register changes in the gas / smoke levels.
+> 3.  Refresh your page. You should see that the value of `'value'` in the displayed data is set to `0`. If it does not, try refreshing your page a few more times. If it still does not work, then check with your instructor. The MQ sensor test is not always reliable, and your code may be correct even if the value isn't updating.
 
-3. **Create the route if a link exists:**
+**DO NOT PROCEED UNLESS YOU SEE `value` SET TO 0 OR YOUR INSTRUCTOR SAYS OKAY**
 
-   - Use `resource.link` as the URL when creating the route. For example:
-     ```javascript
-     router.route(resource.link).get(function (req, res, next) {
-       // Callback function content here
-     });
-     ```
-   - Build the `.get()` callback function:
+### TODO 6: DHT Plugin
 
-     - The callback should perform the following actions:
-       1. Create an empty object called `links` to store links to subresources.
-       2. Add the `links` object to the response header with:
-          ```javascript
-          res.links(links);
-          ```
-       3. Attach the `links` object to the response with:
-          ```javascript
-          req.links = links;
-          ```
-       4. Assign the current resource to `req.result`.
-       5. Call the `next()` function to pass control to the next middleware.
+The last thing you need to do is set up your DHT sensor plugin and update the wot-server to use that plugin as well. Do so in the **`plugins/internal/dhtPlugin.js`** file. The process is similar to handling the PIR plugin. Notice that once again there is a `device` variable that grabs the resource model for the DHT sensor. You will use this variable to help interface with the device. Also note the `localParams` and `interval` variables, which you will be using as well.
 
-4. **Make the function recursive to handle subresources:**
+<hr>
 
-   - Resources on your Pi often contain nested subresources. For example:
+- **6a)** The `connectHardware` function
+  - **6a-1)** Create the following function:
+    - **Name:** `connectHardware`
+    - **Parameters:** None
+    - **Returns:** Nothing
+    - **Description:** This function should do the following:
+      1. Assign an object to the `sensor` variable (which already exists in the global scope). The object should contain two properties, the keys of which should be `initialize` and `read`. Both keys should have a function as their corresponding values.
 
-     - `resources` contains `resources.pi`.
-     - `resources.pi` has `sensors`, `actuators`, and `actions`.
+      In short, your object should look like:
 
-   - To handle this:
+      ```js
+      {
+          initialize: function(){
+              // initialize function body
+          },
+          read: function(){
+              // read function body
+          }
+      }
+      ```
 
-     1. At the bottom of the `generateRoute` function, loop through the properties of the `resource` object using a `for-in` loop.
-     2. Inside the loop, check if a property’s value is an object using:
-        ```javascript
-        if (typeof someValue === "object") {
-          // Handle subresource
-        }
-        ```
-     3. For each valid subresource, recursively call `generateRoute` with:
-        ```javascript
-        generateRoute(router, subresource);
-        ```
+  - **6a-2)** Create the body of the `initialize` function. This function should call`sensorDriver.initialize(device.model, device.gpio)`, which sets up the connection with your DHT sensor
 
-   - **Hint:** Use the following structure for your `for-in` loop:
-     ```javascript
-     for (var key in resource) {
-       var value = resource[key];
-       if (typeof value === "object") {
-         // Call generateRoute for the subresource
-       }
-     }
-     ```
+  - **6a-3)** Create the body of the `read` function. This function should update the device model with the current sensor values, as described in the **"READ FUNCTION WALKTHROUGH"**
 
----
+  > <details> <summary>READ FUNCTION WALKTHROUGH (click to open)</summary>
+  >
+  > To update the model, first you must save the result of reading the sensor values. The function `sensorDriver.read` returns an object with this data in it. To obtain that data, merely call the `sensorDriver.read` function (using `device.model` and `device.gpio` as the arguments) and store the result in a new variable (name the variable whatever you wish, but be ready to use it again).
+  >
+  > Next, use the data obtained from `sensorDriver.read` to update your model. For example, if you saved the data object in a variable called `readout`, you could update the temperature value using the line
+  >
+  > ```js
+  > device.temperature.value = parseFloat(readout.temperature);
+  > ```
+  >
+  > Finally, make sure that you update both the temperature and the humidity values. To get the humidity value, simply replace the word "temperature" with "humidity" everwhere it occurs in the line of code above.
+  >
+  > </details>
+  - **6a-4)** Right after the object definition, **call both `sensor.initialize()` and `sensor.read()`** to start the DHT running and read the initial values, respectively.
 
-### ✅ Check Your Work!
+    Finally, set up an interval that will regularly call `sensor.read()` by adding the following code:
 
-After completing the above steps, test your implementation by running the server:
+    ```js
+    interval = setInterval(function () {
+      sensor.read();
+    }, localParams.frequency);
+    ```
 
-1. Start your server with:
+<hr>
 
-```bash
-node wot-server.js
-```
+- **6b)** Create the following function to be exported
+  - **Name:** `start`
+  - **Parameters:** `params` (expects an object)
+  - **Returns:** Nothing
+  - **Description:** This function should do the following:
+    1. On the first line, put `localParams = params ? params : localParams;` to use the passed in parameters
+    2. Next, call `connectHardware`
 
-2. Use a browser or Postman to navigate to various URLs corresponding to your Pi’s resources. Examples include:
+  > **IMPORTANT: If you don't recall how to export a function, refer to TODO 5b**
 
-   - `<your Pi’s IP>:8484/pi`
-   - `<your Pi’s IP>:8484/pi/sensors`
-   - `<your Pi’s IP>:8484/pi/actuators`
+<hr>
 
-3. Verify that you receive valid responses for all resources. If the routes work dynamically, congratulations—you’ve automated route creation! 🚀
+- **6c)** Create the following function to be exported
+  - **Name:** `stop`
+  - **Parameters:** None
+  - **Returns:** Nothing
+  - **Description:** This function should call `clearInterval(interval)`, and do nothing else.
 
-<br><br><br><br>
+<hr>
 
-### TODO 4: populateLinks Function
+- **6d)** Update wot-server.js
 
-🎯 **Goal:** Generate a list of subresource links for any given resource and include those links in both the response header and the `req` object.
+  In `wot-server.js`, import the DHT plugin with the other imports.
 
----
+  Then, start the plugin with the command `dhtPlugin.start({'frequency': 2000});` (think carefully about where this should go in the file), though feel free to change the number if you want the sensor to give updates more or less often than every 2000 milliseconds.
 
-### Step-by-Step Instructions
+  Finally, in the `process.on()`'s callback function, add the line
 
-1. **Create and call the `populateLinks` function:**
+  ```js
+  dhtPlugin.stop();
+  ```
 
-   - **4a-1:** Create the following function:
+  to just before the call to `process.exit()`.
 
-     - **Name:** `populateLinks`
-     - **Parameters:** A resource object (call it `resource`).
-     - **Returns:** An object containing only links.
-     - **Description:** Analyzes the properties of a resource, creates an object of links, and returns that object.
+  That's it! You've set up a server that provides an interface to multiple devices on your Pi!
 
-   - **4a-2:** In your `generateRoute` function, locate where you are giving an empty object to the `links` variable. Replace the empty object with a call to `populateLinks`, passing the current `resource` as an argument.
+<hr>
 
-2. **Build the `populateLinks` function body:**
-
-   - **4b-1:** On the first line of the function, create an empty object called `linkObject`.
-
-   - **4b-2:** Create a `for-in` loop that iterates over the `resource` parameter. For now, leave the body of the loop empty.
-
-   - **4b-3:** After the `for-in` loop, return the `linkObject`.
-
-3. **Program the `for-in` loop:**
-
-   - **4c-1:** Inside the loop, check if the current property's value is an object. (Refer to **TODO 3e** for examples of how to do this.)
-
-   - **4c-2:** If the value is an object, assign it to a variable called `subResource` (optional but recommended).
-
-   - **4c-3:** Check if the `subResource` has a `link` property (similar to **TODO 3b**). If it does, add a new property to the `linkObject`:
-     - **Key:** `subResource.name`
-     - **Value:** `subResource.link`
-
----
-
-### ✅ **Check Your Work!**
-
-After implementing this function, you can verify its success by checking the response headers.
-
-1. **Start your server:**
-
-   ```bash
-   node wot-server.js
-   ```
-
-2. **Send a request to the Pi's root resource:**
-   In a separate terminal, run:
-
-   ```bash
-   curl -v localhost:8484/pi/
-   ```
-
-3. **Verify the response:**
-   Look for the `Link` header in the output. It should include entries like:
-
-   ```javascript
-   Link: </pi/sensors>; rel="Sensors List", </pi/actuators>; rel="Actuators List", </pi/actions>; rel="Actions List"
-   ```
-
-   If the links appear as expected, congratulations! Your server now automatically generates and shares subresource links in the response headers. 🚀
-
-<br><br><br><br>
-
-### TODO 5: Update the Converter
-
-🎯 **Goal:** Enhance your HTML response to include clickable links for navigating subresources directly from the browser.
-
----
-
-### Step-by-Step Instructions
-
-1. **Update the HTML response:**
-
-   - **5a-1:** Locate the `res.send()` statement for your HTML responses in the `converter.js` file.
-   - **5a-2:** Replace the current response with the following code:
-
-     ```javascript
-     let response = json2html.transform(req.result, transform);
-     let links = generateLinks(req.links);
-
-     res.send(response + links);
-     ```
-
-     > **READ:** This update ensures that your HTML responses include both the resource data and a list of clickable links to subresources.
-
-2. **Create the `generateLinks` function:**
-
-   - **5b-1:** Define a new function with the following details:
-
-     - **Name:** `generateLinks`
-     - **Parameters:** A `linkList` object containing links to subresources.
-     - **Returns:** A string of HTML code.
-
-   - **5b-2:** Inside the function:
-     1. Create a variable `html` and initialize it with `"<h4>Links</h4>"`.
-     2. Create a `for-in` loop to iterate over `linkList`. For each link:
-        - Append the following to `html`:
-          ```javascript
-          "<a href=" + linkList[link] + ">" + link + "</a><br>";
-          ```
-     3. Return `html` after the loop completes.
-
----
-
-### ✅ **Check Your Work!**
-
-To verify that your changes are working:
-
-1. **Restart your server:**
-
-   ```bash
-   node wot-server.js
-   ```
-
-2. **Visit resource URLs in your browser:**
-   Open a browser and navigate to one of your resource URLs, such as:
-
-   - `arduino`
-   - `Copy code`
-   - `http://localhost:8484/`
-
-3. **Test the links:**
-
-   - Confirm that the page displays resource data as before.
-   - Check that links to subresources appear under a "Links" section.
-   - Click the links to verify they navigate correctly to their respective subresources.
-
-If everything works as expected, congratulations! 🎉 You've made your Pi server significantly more user-friendly and dynamic. This final step completes your automated routing system, providing seamless navigation and scalability for future enhancements. 🚀
-
-<br><br><br><br>
-
-### Challenge: Automate Parent Links
-
-🎯 **Goal:** Enhance your server to include parent links in the response headers, allowing users to navigate back to the root resource from any subresource.
-
-### Step-by-Step Instructions (Optional)
-
-1. **Update the `populateLinks` function:**
-
-   - **1a-1:** Add a new parameter to the `populateLinks` function called `parentLink`.
-   - **1a-2:** Inside the function, check if `parentLink` is defined. If it is, add a new property to the `linkObject`:
-
-     - **Key:** `Parent`
-     - **Value:** `parentLink`
-
-     > **HINT:** If there is no parent link, then `parentLink` should be either `undefined` or `null`.
-
-2. **Update the `generateRoute` function:**
-
-   - **2a-1:** In the `generateRoute` function, add a new parameter to the `generateRoute` function call inside the recursive loop.
-   - **2a-2:** Pass the current resource's `link` property as the `parentLink` argument.
-
-3. **Display the parent link in the HTML**
-
-   - **3a-1:** Update the `generateLinks` function to include the parent link in the HTML output.
-   - **3a-2:** Add the following code to the beginning of the function:
-     ```javascript
-     if (linkList.Parent) {
-       html += "<a href=" + linkList.Parent + ">Parent</a><br>";
-     }
-     ```
-
-4. **Test the parent link:**
-
-   - **4a-1:** Restart your server.
-   - **4a-2:** Visit a subresource URL in your browser.
-   - **4a-3:** Confirm that the "Links" section now includes a "Parent" link.
-   - **4a-4:** Click the "Parent" link to verify it navigates back to the root resource.
-
-Completing this challenge will enhance your server's navigation capabilities, allowing users to move between resources more efficiently. If you choose to tackle this challenge, great job! 🚀
+> **TEST YOUR CODE**
+>
+> To test your code at this point, follow the steps listed at the top of these instructions in the **Important Information** section. Then, do the following.
+>
+> 1.  Open your browser at `'<your Pi's IP address>:8484/pi/sensors/dht/temperature`
+> 2.  Look at the value of `value` in the displayed data. If the value is `0`, then refresh your page. Assuming that your DHT sensor is hooked up correctly, the value should change to a non-zero value.
+> 3.  Open your browser at `'<your Pi's IP address>:8484/pi/sensors/dht/humidity`
+> 4.  Look at the value of `value` in the displayed data. If the value is `0`, then refresh your page. Assuming that your DHT sensor is hooked up correctly, the value should change to a non-zero value.
+>
+> If you see both the temperature and humidity values changing to a non-zero value, then everything is good and you are done with this project. Don't forget to push it to GitHub!
