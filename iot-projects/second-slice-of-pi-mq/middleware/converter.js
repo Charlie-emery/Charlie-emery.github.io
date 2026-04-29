@@ -1,9 +1,12 @@
 const json2html = require("node-json2html");
-
+var info1 = 0;
+var info2 = 0;
 module.exports = function () {
   return function (req, res, next) {
     // TODO 2: Create the converter function
     if (req.result) {
+      valueOfDevice(req.result);
+      console.log(req.result);
       if (req.accepts("html")) {
         let render = {
           "<>": "div",
@@ -12,14 +15,14 @@ module.exports = function () {
               "<>": "p",
               html: [
                 { "<>": "b", html: "Property1: " },
-                { "<>": "p", html: "${property1}" },
+                { "<>": "p", html: info1 },
               ],
             },
             {
               "<>": "p",
               html: [
                 { "<>": "b", html: "Property2: " },
-                { "<>": "p", html: "${property2}" },
+                { "<>": "p", html: info2 },
               ],
             },
           ],
@@ -33,3 +36,16 @@ module.exports = function () {
     }
   };
 };
+
+function valueOfDevice(data) {
+  if (data.name === "MQ Sensor") {
+    info1 = data.value.raw;
+    info2 = data.value.avg;
+  } else if (data.name === "DHT22 Sensor") {
+    info1 = data.temperature.value;
+    info2 = data.humidity.value;
+  } else if (data.name === "Actuators List") {
+    info1 = data.leds["1"].value;
+    info2 = data.leds["2"].value;
+  }
+}
